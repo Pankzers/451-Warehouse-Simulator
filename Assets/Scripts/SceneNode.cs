@@ -10,8 +10,6 @@ public class SceneNode : MonoBehaviour
     public Vector3 NodeOrigin = Vector3.zero;
     public List<NodePrimitive> PrimitiveList;
 
-    public Camera smallCam = null;
-
     // Use this for initialization
     protected void Start()
     {
@@ -53,10 +51,6 @@ public class SceneNode : MonoBehaviour
             p.LoadShaderMatrix(ref mCombinedParentXform);
         }
 
-        if (smallCam != null)
-        {
-            smallCam.gameObject.transform.localPosition = mCombinedParentXform.MultiplyPoint(new Vector3(-6, 4, 0));
-        }
-
     }
+
 }
