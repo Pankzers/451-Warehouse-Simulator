@@ -10,6 +10,9 @@ public class SceneNode : MonoBehaviour
     public Vector3 NodeOrigin = Vector3.zero;
     public List<NodePrimitive> PrimitiveList;
 
+    public Camera primaryCamera;
+    public Transform body;
+
     // Use this for initialization
     protected void Start()
     {
@@ -51,6 +54,35 @@ public class SceneNode : MonoBehaviour
             p.LoadShaderMatrix(ref mCombinedParentXform);
         }
 
+        if (primaryCamera != null)
+        {
+            primaryCamera.gameObject.transform.localPosition = mCombinedParentXform.MultiplyPoint(new Vector3(-4, 4, 0));
+            primaryCamera.gameObject.transform.localRotation = getQuaternion(body.transform.right, Vector3.right);
+            float yRotation = primaryCamera.gameObject.transform.localRotation.eulerAngles.y;
+            if (yRotation > 90 && yRotation < 270)
+            {
+                //primaryCamera.gameObject.transform.localRotation *= Quaternion.Euler(0, 90, 0);
+            }
+        }
+
+    }
+
+    public Quaternion getQuaternion(Vector3 dir, Vector3 up)
+    {
+        if (dir == Vector3.zero)
+        {
+            return Quaternion.identity;
+        }
+        if (up != dir)
+        {
+            up.Normalize();
+            var from = dir + up * -Vector3.Dot(up, dir);
+            var to = Quaternion.FromToRotation(Vector3.forward, from);
+            return Quaternion.FromToRotation(from, dir) * to;
+        } else
+        {
+            return Quaternion.FromToRotation(Vector3.forward, dir);
+        }
     }
 
 }
