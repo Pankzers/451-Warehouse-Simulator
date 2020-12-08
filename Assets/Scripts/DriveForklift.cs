@@ -5,11 +5,12 @@ using UnityEngine;
 public class DriveForklift : MonoBehaviour
 {
     public GameObject forkliftBase;
+    public CameraManipulation forkliftCams = null;
     public float direction;
 
     void Start()
     {
-
+        Debug.Assert(forkliftCams != null);
     }
 
     void Update()
@@ -38,5 +39,7 @@ public class DriveForklift : MonoBehaviour
         {
             forkliftBase.transform.localPosition += forkliftBase.transform.right * 0.01f * direction;
         }
+
+        forkliftCams.UpdateCameras();
     }
 }
