@@ -85,4 +85,9 @@ public class SceneNode : MonoBehaviour
         }
     }
 
+    public Matrix4x4 getCombinedMatrix()
+    {
+        return mCombinedParentXform;
+    }
+
 }

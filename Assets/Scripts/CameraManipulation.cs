@@ -6,8 +6,14 @@ public class CameraManipulation : MonoBehaviour
 {
     public Camera mMainCamera = null;
     public Camera mSecondaryCamera = null;
-    public Transform defaultMainLookPoint = null;
-    public Transform defaultSecondaryLookPoint = null;
+    public Vector3 defaultMainLookPoint = new Vector3();
+    public Vector3 defaultSecondaryLookPoint = new Vector3();
+
+    public Vector3 MainCamPos = new Vector3();
+    public Vector3 SecondaryCamPos = new Vector3();
+
+    public SceneNode mainCamNode;
+    public SceneNode secondaryCamNode;
 
     private void Start()
     {
@@ -19,8 +25,21 @@ public class CameraManipulation : MonoBehaviour
     public void UpdateCameras()
     {
         ProcessMouseEvents();
-        AimCamera(mMainCamera, defaultMainLookPoint);
-        AimCamera(mSecondaryCamera, defaultSecondaryLookPoint);
+        if(mainCamNode != null)
+        {
+            AimCamera(mMainCamera, defaultMainLookPoint, MainCamPos,mainCamNode);
+        } else
+        {
+            AimCamera(mMainCamera, defaultMainLookPoint, MainCamPos);
+        }
+        if (secondaryCamNode != null)
+        {
+            AimCamera(mSecondaryCamera, defaultSecondaryLookPoint, SecondaryCamPos, secondaryCamNode);
+        } else
+        {
+            AimCamera(mSecondaryCamera, defaultSecondaryLookPoint, SecondaryCamPos);
+        }
+            
     }
 
     void ProcessMouseEvents()
@@ -50,29 +69,43 @@ public class CameraManipulation : MonoBehaviour
                 Quaternion q2 = Quaternion.AngleAxis(thetay, mMainCamera.transform.right);
                 q = q2 * q;
                 Matrix4x4 r = Matrix4x4.TRS(Vector3.zero, q, Vector3.one);
-                Matrix4x4 invP = Matrix4x4.TRS(-defaultMainLookPoint.localPosition, Quaternion.identity, Vector3.one);
+                Matrix4x4 invP = Matrix4x4.TRS(-mainCamNode.getCombinedMatrix().GetColumn(3), Quaternion.identity, Vector3.one);
                 r = invP.inverse * r * invP;
-                Vector3 newCameraPos = r.MultiplyPoint(mMainCamera.transform.localPosition);
-                mMainCamera.transform.localPosition = newCameraPos;
+                Vector3 newCameraPos = r.MultiplyPoint(MainCamPos);
+                MainCamPos = newCameraPos;
 
             }
             else if (Input.GetMouseButton(1))
             {
                 float thetax = Input.GetAxis("Mouse X");
                 float thetay = Input.GetAxis("Mouse Y");
-                Vector3 LookPos = defaultSecondaryLookPoint.localPosition;
-                Vector3 CamPos = mSecondaryCamera.transform.localPosition;
-                defaultSecondaryLookPoint.localPosition = LookPos + thetax * mSecondaryCamera.transform.right + thetay * mSecondaryCamera.transform.up;
-                mSecondaryCamera.transform.localPosition = CamPos + thetax * mSecondaryCamera.transform.right + thetay * mSecondaryCamera.transform.up;
+                Vector3 LookPos = defaultSecondaryLookPoint;
+                Vector3 CamPos = SecondaryCamPos;
+                defaultSecondaryLookPoint = (Vector3)secondaryCamNode.getCombinedMatrix().GetColumn(3) + thetax * mSecondaryCamera.transform.right + thetay * mSecondaryCamera.transform.up;
+                SecondaryCamPos = CamPos + thetax * mSecondaryCamera.transform.right + thetay * mSecondaryCamera.transform.up;
 
             }
-            mMainCamera.transform.localPosition = mMainCamera.transform.localPosition + Input.mouseScrollDelta.y * mMainCamera.transform.forward;
+            MainCamPos = MainCamPos + Input.mouseScrollDelta.y * mMainCamera.transform.forward;
         }
     }
 
-    void AimCamera(Camera cam, Transform LP)
+    void AimCamera(Camera cam, Vector3 LookPoint, Vector3 CamPos, SceneNode node = null)
     {
-        Vector3 V = LP.localPosition - cam.transform.localPosition;
+        Vector3 V;
+        if(node != null)
+        {
+            Matrix4x4 parentNodeMatrix = node.getCombinedMatrix();
+            cam.transform.localPosition = parentNodeMatrix * CamPos + parentNodeMatrix.GetColumn(3);
+            V = (Vector3)parentNodeMatrix.GetColumn(3) - cam.transform.localPosition;
+            Debug.Log("LP: " + parentNodeMatrix.GetColumn(3));
+        } else
+        {
+            V = LookPoint - cam.transform.localPosition;
+            Debug.Log("LP: " + LookPoint);
+        }
+        Debug.Log("Camera Local Pos: " + cam.transform.localPosition);
+        
+        
         V = V.normalized;
         Vector3 W = Vector3.Cross(-V, Vector3.up);
         Vector3 U = Vector3.Cross(W, -V);
