@@ -69,7 +69,7 @@ public class CameraManipulation : MonoBehaviour
                 Quaternion q2 = Quaternion.AngleAxis(thetay, mMainCamera.transform.right);
                 q = q2 * q;
                 Matrix4x4 r = Matrix4x4.TRS(Vector3.zero, q, Vector3.one);
-                Matrix4x4 invP = Matrix4x4.TRS(-mainCamNode.getCombinedMatrix().GetColumn(3), Quaternion.identity, Vector3.one);
+                Matrix4x4 invP = Matrix4x4.TRS(-1*((Vector3)mainCamNode.getCombinedMatrix().GetColumn(3)+defaultMainLookPoint), Quaternion.identity, Vector3.one);
                 r = invP.inverse * r * invP;
                 Vector3 newCameraPos = r.MultiplyPoint(MainCamPos);
                 MainCamPos = newCameraPos;
@@ -81,8 +81,8 @@ public class CameraManipulation : MonoBehaviour
                 float thetay = Input.GetAxis("Mouse Y");
                 Vector3 LookPos = defaultSecondaryLookPoint;
                 Vector3 CamPos = SecondaryCamPos;
-                defaultSecondaryLookPoint = (Vector3)secondaryCamNode.getCombinedMatrix().GetColumn(3) + thetax * mSecondaryCamera.transform.right + thetay * mSecondaryCamera.transform.up;
-                SecondaryCamPos = CamPos + thetax * mSecondaryCamera.transform.right + thetay * mSecondaryCamera.transform.up;
+                defaultSecondaryLookPoint = (defaultSecondaryLookPoint) + thetax * mSecondaryCamera.transform.right;
+                SecondaryCamPos = CamPos + thetax * mSecondaryCamera.transform.right;
 
             }
             MainCamPos = MainCamPos + Input.mouseScrollDelta.y * mMainCamera.transform.forward;
@@ -96,7 +96,8 @@ public class CameraManipulation : MonoBehaviour
         {
             Matrix4x4 parentNodeMatrix = node.getCombinedMatrix();
             cam.transform.localPosition = parentNodeMatrix * CamPos + parentNodeMatrix.GetColumn(3);
-            V = (Vector3)parentNodeMatrix.GetColumn(3) - cam.transform.localPosition;
+            //V = (Vector3)parentNodeMatrix.GetColumn(3) - cam.transform.localPosition;
+            V = (Vector3)parentNodeMatrix.GetColumn(3) + LookPoint - cam.transform.localPosition;
             Debug.Log("LP: " + parentNodeMatrix.GetColumn(3));
         } else
         {
