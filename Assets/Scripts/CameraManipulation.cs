@@ -98,13 +98,13 @@ public class CameraManipulation : MonoBehaviour
             cam.transform.localPosition = parentNodeMatrix * CamPos + parentNodeMatrix.GetColumn(3);
             //V = (Vector3)parentNodeMatrix.GetColumn(3) - cam.transform.localPosition;
             V = (Vector3)parentNodeMatrix.GetColumn(3) + LookPoint - cam.transform.localPosition;
-            Debug.Log("LP: " + parentNodeMatrix.GetColumn(3));
+            //Debug.Log("LP: " + parentNodeMatrix.GetColumn(3));
         } else
         {
             V = LookPoint - cam.transform.localPosition;
             Debug.Log("LP: " + LookPoint);
         }
-        Debug.Log("Camera Local Pos: " + cam.transform.localPosition);
+        //Debug.Log("Camera Local Pos: " + cam.transform.localPosition);
         
         
         V = V.normalized;
