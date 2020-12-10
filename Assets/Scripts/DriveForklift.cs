@@ -18,9 +18,14 @@ public class DriveForklift : MonoBehaviour
 
     public GameObject box;
 
+    public TheWorld world = null;
+
+    private Vector3 colliderOffset = new Vector3(0.77f, 1.7f, 0);
+
     void Start()
     {
         Debug.Assert(forkliftCams != null);
+        Debug.Assert(world != null);
     }
 
     void Update()
@@ -82,7 +87,7 @@ public class DriveForklift : MonoBehaviour
         }
     }*/
 
-    public void checkCollision()
+    /*public void checkCollision()
     {
         Matrix4x4 parentMatrix = forksSceneNode.getCombinedMatrix();
         Vector3 position = parentMatrix.GetColumn(3);
@@ -115,6 +120,14 @@ public class DriveForklift : MonoBehaviour
             {
                 rightCollide = false;
             }
+        }
+    }*/
+    public void checkCollision()
+    {
+        ArrayList toTest = world.testCollision(transform);
+        if(toTest.Count != 0)
+        {
+            Debug.Log("Colliding!");
         }
     }
 
