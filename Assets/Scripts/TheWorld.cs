@@ -7,10 +7,12 @@ public class TheWorld : MonoBehaviour
 {
     public Transform Aisles = null;
     public SceneNode TheRoot;
+    public SeparatingAxisTest SAT = null;
 
     private void Start()
     {
         Debug.Assert(Aisles != null);
+        Debug.Assert(SAT != null);
     }
 
     private void Update()

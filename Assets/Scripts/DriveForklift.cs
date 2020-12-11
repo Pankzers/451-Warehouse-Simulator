@@ -20,8 +20,6 @@ public class DriveForklift : MonoBehaviour
 
     public TheWorld world = null;
 
-    private Vector3 colliderOffset = new Vector3(0.77f, 1.7f, 0);
-
     void Start()
     {
         Debug.Assert(forkliftCams != null);
@@ -127,8 +125,27 @@ public class DriveForklift : MonoBehaviour
         ArrayList toTest = world.testCollision(transform);
         if(toTest.Count != 0)
         {
-            Debug.Log("Colliding!");
+            Debug.Log("Rough Colliding!");
         }
+        //bool fineCollision = world.SAT.CheckCollision()
+        foreach (Transform xform in toTest)
+        {
+            Debug.Log("With: " + xform.name);
+            foreach (Transform childform in xform)
+            {
+                bool fineCollisionBody = world.SAT.CheckCollision(frame.transform, frame.GetComponent<MeshFilter>().mesh, childform, childform.GetComponent<MeshFilter>().mesh);
+                bool fineCollisionLeftFork = world.SAT.CheckCollision(leftFork.transform, leftFork.GetComponent<MeshFilter>().mesh, childform, childform.GetComponent<MeshFilter>().mesh);
+                //bool fineCollisionLeftFork = world.SAT.CheckCollision(leftFork.transform, xform);
+                //bool fineCollisionRightFork = world.SAT.CheckCollision(rightFork.transform, xform);
+                bool fineCollisionRightFork = world.SAT.CheckCollision(rightFork.transform, leftFork.GetComponent<MeshFilter>().mesh, childform, childform.GetComponent<MeshFilter>().mesh);
+                if (fineCollisionBody || fineCollisionLeftFork || fineCollisionRightFork)
+                {
+                    Debug.Log("Fine Collision!");
+                }
+            }
+            
+        }
+        
     }
 
 

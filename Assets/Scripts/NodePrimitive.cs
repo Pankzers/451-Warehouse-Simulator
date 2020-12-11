@@ -6,6 +6,7 @@ public class NodePrimitive : MonoBehaviour
 {
     public Color MyColor = new Color(0.1f, 0.1f, 0.2f, 1.0f);
     public Vector3 Pivot;
+    private Matrix4x4 completeNodeMatrix;
 
     // Use this for initialization
     void Start()
@@ -23,7 +24,13 @@ public class NodePrimitive : MonoBehaviour
         Matrix4x4 invp = Matrix4x4.TRS(-Pivot, Quaternion.identity, Vector3.one);
         Matrix4x4 trs = Matrix4x4.TRS(transform.localPosition, transform.localRotation, transform.localScale);
         Matrix4x4 m = nodeMatrix * p * trs * invp;
+        completeNodeMatrix = m;
         GetComponent<Renderer>().material.SetMatrix("MyXformMat", m);
         GetComponent<Renderer>().material.SetColor("MyColor", MyColor);
+    }
+
+    public Matrix4x4 getNodeMatrix()
+    {
+        return completeNodeMatrix;
     }
 }
