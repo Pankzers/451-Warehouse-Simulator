@@ -33,7 +33,7 @@ public class TheWorld : MonoBehaviour
         {
             //Vector3 childPos = child.position;
             BoxCollider aisleCollider = Aisle.GetComponent<BoxCollider>();
-            if(intersectColliders(liftCollider, aisleCollider))
+            if (intersectColliders(liftCollider, aisleCollider))
             {
                 foreach (Transform Shelf in Aisle)
                 {
