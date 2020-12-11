@@ -7,16 +7,21 @@ public class DriveForklift : MonoBehaviour
     public CameraManipulation forkliftCams = null;
     public float direction;
 
-    public SceneNode forkliftBase;
+    public SceneNode frameSceneNode;
     public GameObject frame;
 
     public SceneNode forksSceneNode;
     public GameObject leftFork;
     public GameObject rightFork;
 
+    public SceneNode frontEndSceneNode;
+    public GameObject leftFront;
+    public GameObject rightFront;
+
+
     public TheWorld world = null;
 
-    public Vector3 startingPosition;
+    public Vector3 lastPosition;
     public bool collision;
 
     void Start()
@@ -27,8 +32,11 @@ public class DriveForklift : MonoBehaviour
 
     void Update()
     {
-        startingPosition = forkliftBase.transform.localPosition;
-        if (forkliftBase.transform.right.x < 0)
+        if (!collision)
+        {
+            lastPosition = frameSceneNode.transform.localPosition;
+        }
+        if (frameSceneNode.transform.right.x < 0)
         {
             direction = -1;
         } else
@@ -38,24 +46,24 @@ public class DriveForklift : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             Quaternion q = Quaternion.AngleAxis(-0.1f, Vector3.up);
-            forkliftBase.transform.localRotation = q * forkliftBase.transform.localRotation;
+            frameSceneNode.transform.localRotation = q * frameSceneNode.transform.localRotation;
         } else if (Input.GetKey(KeyCode.A))
         {
-            forkliftBase.transform.localPosition += forkliftBase.transform.right * 0.01f * -direction;
+            frameSceneNode.transform.localPosition += frameSceneNode.transform.right * 0.01f * -direction;
         }
         else if (Input.GetKey(KeyCode.S))
         {
             Quaternion q = Quaternion.AngleAxis(0.1f, Vector3.up);
-            forkliftBase.transform.localRotation = q * forkliftBase.transform.localRotation;
+            frameSceneNode.transform.localRotation = q * frameSceneNode.transform.localRotation;
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            forkliftBase.transform.localPosition += forkliftBase.transform.right * 0.01f * direction;
+            frameSceneNode.transform.localPosition += frameSceneNode.transform.right * 0.01f * direction;
         }
         checkCollision();
         if (collision)
         {
-            forkliftBase.transform.localPosition = startingPosition;
+            frameSceneNode.transform.localPosition = 0.9999f * lastPosition;
             collision = false;
         }
         forkliftCams.UpdateCameras();
@@ -79,11 +87,13 @@ public class DriveForklift : MonoBehaviour
                 //bool fineCollisionLeftFork = world.SAT.CheckCollision(leftFork.transform, xform);
                 //bool fineCollisionRightFork = world.SAT.CheckCollision(rightFork.transform, xform);
                 bool fineCollisionRightFork = world.SAT.CheckCollision(rightFork.transform, leftFork.GetComponent<MeshFilter>().mesh, childform, childform.GetComponent<MeshFilter>().mesh);
-                if (fineCollisionBody || fineCollisionLeftFork || fineCollisionRightFork)
+                bool fineCollisionLeftFront = world.SAT.CheckCollision(leftFront.transform, leftFront.GetComponent<MeshFilter>().mesh, childform, childform.GetComponent<MeshFilter>().mesh);
+                bool fineCollisionRightFront = world.SAT.CheckCollision(rightFront.transform, rightFront.GetComponent<MeshFilter>().mesh, childform, childform.GetComponent<MeshFilter>().mesh);
+                if (fineCollisionBody || fineCollisionLeftFork || fineCollisionRightFork || fineCollisionLeftFront || fineCollisionRightFront)
                 {
                     Debug.Log("Fine Collision!");
                     collision = true;
-                } 
+                }
             }
             
         }
