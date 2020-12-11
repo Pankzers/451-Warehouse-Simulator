@@ -32,7 +32,7 @@ public class DriveForklift : MonoBehaviour
 
     void Update()
     {
-        if (!collision)
+        if (!checkCollision())
         {
             lastPosition = frameSceneNode.transform.localPosition;
         }
@@ -60,16 +60,15 @@ public class DriveForklift : MonoBehaviour
         {
             frameSceneNode.transform.localPosition += frameSceneNode.transform.right * 0.01f * direction;
         }
-        checkCollision();
-        if (collision)
+        bool isColliding = checkCollision();
+        if (isColliding)
         {
-            frameSceneNode.transform.localPosition = 0.9999f * lastPosition;
-            collision = false;
+            frameSceneNode.transform.localPosition = lastPosition;
         }
         forkliftCams.UpdateCameras();
     }
 
-    public void checkCollision()
+    public bool checkCollision()
     {
         ArrayList toTest = world.testCollision(transform);
         if(toTest.Count != 0)
@@ -92,12 +91,12 @@ public class DriveForklift : MonoBehaviour
                 if (fineCollisionBody || fineCollisionLeftFork || fineCollisionRightFork || fineCollisionLeftFront || fineCollisionRightFront)
                 {
                     Debug.Log("Fine Collision!");
-                    collision = true;
+                    return true;
                 }
             }
             
         }
-        
+        return false;
     }
 
 

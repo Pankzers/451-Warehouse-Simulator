@@ -6,12 +6,14 @@ using UnityEngine;
 public class TheWorld : MonoBehaviour
 {
     public Transform Aisles = null;
+    public Transform Pallets = null;
     public SceneNode TheRoot;
     public SeparatingAxisTest SAT = null;
 
     private void Start()
     {
         Debug.Assert(Aisles != null);
+        Debug.Assert(Pallets != null);
         Debug.Assert(SAT != null);
     }
 
@@ -44,6 +46,19 @@ public class TheWorld : MonoBehaviour
             }
 
         }
+
+        //Test Pallets
+        foreach (Transform Pallet in Pallets)
+        {
+            //Vector3 childPos = child.position;
+            BoxCollider palletCollider = Pallet.GetComponent<BoxCollider>();
+            if (intersectColliders(liftCollider, palletCollider))
+            {
+                toTest.Add(Pallet);
+            }
+
+        }
+
         return toTest;
     }
 
