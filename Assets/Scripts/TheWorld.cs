@@ -23,7 +23,7 @@ public class TheWorld : MonoBehaviour
         TheRoot.CompositeXform(ref i);
     }
 
-    public ArrayList testCollision(Transform liftTransform)
+    public ArrayList testShelfCollision(Transform liftTransform)
     {
         ArrayList toTest = new ArrayList();
         BoxCollider liftCollider = liftTransform.GetComponent<BoxCollider>();
@@ -46,19 +46,20 @@ public class TheWorld : MonoBehaviour
             }
 
         }
+        return toTest;
+    }
 
-        //Test Pallets
-        foreach (Transform Pallet in Pallets)
+    public ArrayList testPalletCollision(Transform forkliftXForm)
+    {
+        float threshold = 3.2f;
+        ArrayList toTest = new ArrayList();
+        foreach (Transform palletXForm in Pallets)
         {
-            //Vector3 childPos = child.position;
-            BoxCollider palletCollider = Pallet.GetComponent<BoxCollider>();
-            if (intersectColliders(liftCollider, palletCollider))
+            if (Vector3.Distance(forkliftXForm.position, palletXForm.position) < threshold)
             {
-                toTest.Add(Pallet);
+                toTest.Add(palletXForm);
             }
-
         }
-
         return toTest;
     }
 
