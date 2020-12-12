@@ -21,6 +21,7 @@ public class CameraManipulation : MonoBehaviour
         Debug.Assert(mSecondaryCamera != null);
         Debug.Assert(defaultMainLookPoint != null);
         Debug.Assert(defaultSecondaryLookPoint != null);
+        OnPreCull();
     }
     public void UpdateCameras()
     {
@@ -39,6 +40,7 @@ public class CameraManipulation : MonoBehaviour
         {
             AimCamera(mSecondaryCamera, defaultSecondaryLookPoint, SecondaryCamPos);
         }
+
             
     }
 
@@ -113,6 +115,29 @@ public class CameraManipulation : MonoBehaviour
         cam.transform.localRotation = Quaternion.FromToRotation(Vector3.up, U);
         Quaternion alignU = Quaternion.FromToRotation(cam.transform.forward, V);
         cam.transform.localRotation = alignU * cam.transform.localRotation;
+
+    }
+
+    public Ray getSecondaryCamRay()
+    {
+        return mSecondaryCamera.ScreenPointToRay(Input.mousePosition);
+    }
+
+    private void OnPreCull()
+    {
+        if (mMainCamera != null)
+        {
+            mMainCamera.cullingMatrix = Matrix4x4.Ortho(-99999, 99999, -99999, 99999, 0.001f, 99999) *
+                                Matrix4x4.Translate(Vector3.forward * -99999 / 2f) *
+                                mMainCamera.worldToCameraMatrix;
+        }
+
+        if (mSecondaryCamera != null)
+        {
+            mSecondaryCamera.cullingMatrix = Matrix4x4.Ortho(-99999, 99999, -99999, 99999, 0.001f, 99999) *
+                                Matrix4x4.Translate(Vector3.forward * -99999 / 2f) *
+                                mSecondaryCamera.worldToCameraMatrix;
+        }
 
     }
 }

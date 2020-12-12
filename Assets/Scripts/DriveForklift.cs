@@ -21,13 +21,17 @@ public class DriveForklift : MonoBehaviour
     public TheWorld world = null;
 
     public Vector3 lastPosition;
-
+    public bool collision;
+    public bool draggingFront;
+    public bool draggingForks;
     public Transform selectedPallet;
 
     void Start()
     {
         Debug.Assert(forkliftCams != null);
         Debug.Assert(world != null);
+        draggingFront = false;
+        draggingForks = false;
     }
 
     void Update()
@@ -65,11 +69,42 @@ public class DriveForklift : MonoBehaviour
         {
             frameSceneNode.transform.localPosition = lastPosition;
         }
+        if(Input.GetMouseButtonDown(0) && !Input.GetKey(KeyCode.LeftAlt))
+        {
+            Ray ray = forkliftCams.getSecondaryCamRay();
+            if(CheckRayPartIntersection(ray, leftFront))
+            {
+                draggingFront = true;
+            } else if(CheckRayPartIntersection(ray, rightFront))
+            {
+                draggingFront = true;
+            } else if (CheckRayPartIntersection(ray, leftFork.gameObject))
+            {
+                draggingForks = true;
+            } else if (CheckRayPartIntersection(ray, rightFork.gameObject))
+            {
+                draggingForks = true;
+            }
+        }
+        if(draggingFront)
+        {
+
+        }
+        if(draggingForks)
+        {
+
+        }
+        if(Input.GetMouseButtonUp(0))
+        {
+            draggingFront = false;
+            draggingForks = false;
+        }
         bool canPickUp = checkPalletCollision();
         if (canPickUp)
         {
             pickUpPallet();
         }
+
         forkliftCams.UpdateCameras();
     }
 
@@ -100,7 +135,28 @@ public class DriveForklift : MonoBehaviour
         }
         return false;
     }
-
+    bool CheckRayPartIntersection(Ray ray, GameObject obj)
+    {
+        Vector3 test = new Vector3(1, 1, 1);
+        
+        Vector3 rayOrigin = ray.origin;
+        Vector3 rayDirection = ray.direction;
+        Debug.Log(rayOrigin);
+        Debug.Log(rayDirection);
+        Debug.DrawRay(rayOrigin, rayDirection, Color.blue, 10);
+        NodePrimitive node = obj.GetComponent<NodePrimitive>();
+        Matrix4x4 trsMatrix = node.getNodeMatrix();
+        Matrix4x4 invtrsMatrix = trsMatrix.inverse;
+        rayOrigin = invtrsMatrix * rayOrigin;
+        rayDirection = (Vector3)(invtrsMatrix * rayDirection).normalized;
+        test = invtrsMatrix * test;
+        Debug.Log("Test Point: " + test);
+        Debug.Log("Reverse Test Point: " + trsMatrix * test);
+        Debug.Log(rayOrigin);
+        Debug.Log(rayDirection);
+        Debug.DrawRay(rayOrigin, rayDirection, Color.red, 10);
+        return false;
+    }
     public bool checkPalletCollision()
     {
         ArrayList toTest = world.testPalletCollision(transform);
