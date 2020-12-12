@@ -72,19 +72,21 @@ public class DriveForklift : MonoBehaviour
         if(Input.GetMouseButtonDown(0) && !Input.GetKey(KeyCode.LeftAlt))
         {
             Ray ray = forkliftCams.getSecondaryCamRay();
-            if(CheckRayPartIntersection(ray, leftFront))
+            bool leftFrontCheck = CheckRayPartIntersection(ray, leftFront);
+            Debug.Log(leftFrontCheck);
+            if (leftFrontCheck)
             {
                 draggingFront = true;
-            } else if(CheckRayPartIntersection(ray, rightFront))
-            {
-                draggingFront = true;
-            } else if (CheckRayPartIntersection(ray, leftFork.gameObject))
-            {
-                draggingForks = true;
-            } else if (CheckRayPartIntersection(ray, rightFork.gameObject))
-            {
-                draggingForks = true;
-            }
+            } //else if(CheckRayPartIntersection(ray, rightFront))
+            //{
+            //    draggingFront = true;
+            //} else if (CheckRayPartIntersection(ray, leftFork.gameObject))
+            //{
+            //    draggingForks = true;
+            //} else if (CheckRayPartIntersection(ray, rightFork.gameObject))
+            //{
+            //    draggingForks = true;
+            //}
         }
         if(draggingFront)
         {
@@ -137,26 +139,122 @@ public class DriveForklift : MonoBehaviour
     }
     bool CheckRayPartIntersection(Ray ray, GameObject obj)
     {
-        Vector3 test = new Vector3(1, 1, 1);
+        //Vector3 test = new Vector3(1, 1, 1);
+
         
         Vector3 rayOrigin = ray.origin;
         Vector3 rayDirection = ray.direction;
-        Debug.Log(rayOrigin);
-        Debug.Log(rayDirection);
-        Debug.DrawRay(rayOrigin, rayDirection, Color.blue, 10);
+        //Debug.Log(rayOrigin);
+        //Debug.Log(rayDirection);
+        //Debug.DrawRay(rayOrigin, rayDirection, Color.blue, 10);
         NodePrimitive node = obj.GetComponent<NodePrimitive>();
         Matrix4x4 trsMatrix = node.getNodeMatrix();
-        Matrix4x4 invtrsMatrix = trsMatrix.inverse;
-        rayOrigin = invtrsMatrix * rayOrigin;
-        rayDirection = (Vector3)(invtrsMatrix * rayDirection).normalized;
-        test = invtrsMatrix * test;
-        Debug.Log("Test Point: " + test);
-        Debug.Log("Reverse Test Point: " + trsMatrix * test);
-        Debug.Log(rayOrigin);
-        Debug.Log(rayDirection);
-        Debug.DrawRay(rayOrigin, rayDirection, Color.red, 10);
+        /*
+         * CODE CREDIT TO CALVIN1602 until LINE 245
+         * https://github.com/opengl-tutorials/ogl/blob/master/misc05_picking/misc05_picking_custom.cpp
+         * OpenGL Tutorial Repository and Project
+         * This is an adaptation of the code used in MP3 for detection of ray intersection with OBB (Oriented Bounding Box).
+         * Citation:
+         * Calvin1602. “OpenGL Tutorials Misc05 Picking Custom.” misc05_picking_custom.Cpp, Opengl-Tutorials, 23 Feb. 2018, github.com/opengl-tutorials/ogl/blob/master/misc05_picking/misc05_picking_custom.cpp. 
+         */
+        float tMin = 0.0f;
+        float tMax = 1000.0f;
+        Vector3 nodePos = trsMatrix.GetColumn(3);
+        Vector3 xAxis = trsMatrix.GetColumn(0).normalized;
+        Vector3 yAxis = trsMatrix.GetColumn(1).normalized;
+        Vector3 zAxis = trsMatrix.GetColumn(2).normalized;
+        Bounds bound = obj.GetComponent<BoxCollider>().bounds;
+        Vector3 rayDelta = nodePos - rayOrigin;
+        {
+            
+            float e = Vector3.Dot(xAxis, rayDelta);
+            float f = Vector3.Dot(rayDirection, xAxis);
+            if (Mathf.Abs(f) > Mathf.Epsilon)
+            {
+                float t1 = (e + bound.min.x) / f;
+                float t2 = (e + bound.max.x) / f;
+                if(t1>t2)
+                {
+                    float w = t1;t1 = t2;t2 = w;
+                }
+                if (t2 < tMax)
+                    tMax = t2;
+                if (t1 > tMin)
+                    tMin = t1;
+                if(tMax < tMin)
+                {
+                    return false;
+                }
+            } else
+            {
+                if (-e + bound.min.x > 0.0f || -e + bound.max.x < 0.0f)
+                    return false;
+            }
+        }
+        {
+
+            float e = Vector3.Dot(yAxis, rayDelta);
+            float f = Vector3.Dot(rayDirection, yAxis);
+            if (Mathf.Abs(f) > Mathf.Epsilon)
+            {
+                float t1 = (e + bound.min.y) / f;
+                float t2 = (e + bound.max.y) / f;
+                if (t1 > t2)
+                {
+                    float w = t1; t1 = t2; t2 = w;
+                }
+                if (t2 < tMax)
+                    tMax = t2;
+                if (t1 > tMin)
+                    tMin = t1;
+                if (tMax < tMin)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (-e + bound.min.y > 0.0f || -e + bound.max.y < 0.0f)
+                    return false;
+            }
+        }
+        {
+
+            float e = Vector3.Dot(zAxis, rayDelta);
+            float f = Vector3.Dot(rayDirection, zAxis);
+            if (Mathf.Abs(f) > Mathf.Epsilon)
+            {
+                float t1 = (e + bound.min.z) / f;
+                float t2 = (e + bound.max.z) / f;
+                if (t1 > t2)
+                {
+                    float w = t1; t1 = t2; t2 = w;
+                }
+                if (t2 < tMax)
+                    tMax = t2;
+                if (t1 > tMin)
+                    tMin = t1;
+                if (tMax < tMin)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (-e + bound.min.z > 0.0f || -e + bound.max.z < 0.0f)
+                    return false;
+            }
+        }
+        return true;
+        //END CODE CREDIT TO CALVIN1602
+
+        //Matrix4x4 invtrsMatrix = trsMatrix.inverse;
+        //rayOrigin = invtrsMatrix * (rayOrigin-(Vector3)trsMatrix.GetColumn(3));
+        //rayDirection = (Vector3)(invtrsMatrix * rayDirection);
+        //Debug.DrawRay(rayOrigin, rayDirection*100, Color.red, 10);
         return false;
     }
+    
     public bool checkPalletCollision()
     {
         ArrayList toTest = world.testPalletCollision(transform);
