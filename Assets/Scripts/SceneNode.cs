@@ -38,9 +38,9 @@ public class SceneNode : MonoBehaviour
         
         mCombinedParentXform = parentXform * orgT * trs;
         //Quaternion rot = mCombinedParentXform
-        Debug.DrawRay(mCombinedParentXform.GetColumn(3), mCombinedParentXform.GetColumn(1).normalized * 5.0f, Color.green);
-        Debug.DrawRay(mCombinedParentXform.GetColumn(3), mCombinedParentXform.GetColumn(0).normalized * 5.0f, Color.red);
-        Debug.DrawRay(mCombinedParentXform.GetColumn(3), mCombinedParentXform.GetColumn(2).normalized * 5.0f, Color.blue);
+        //Debug.DrawRay(mCombinedParentXform.GetColumn(3), mCombinedParentXform.GetColumn(1).normalized * 5.0f, Color.green);
+        //Debug.DrawRay(mCombinedParentXform.GetColumn(3), mCombinedParentXform.GetColumn(0).normalized * 5.0f, Color.red);
+        //Debug.DrawRay(mCombinedParentXform.GetColumn(3), mCombinedParentXform.GetColumn(2).normalized * 5.0f, Color.blue);
 
         // propagate to all children
         foreach (Transform child in transform)
