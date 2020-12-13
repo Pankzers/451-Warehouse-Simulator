@@ -23,9 +23,11 @@ public class MainController : MonoBehaviour
     private static Transform pallet = null;
 
     public Color originalColor;
+    public Material shelfMaterial;
 
     void Start()
     {
+
     }
 
     void Update()
@@ -59,17 +61,15 @@ public class MainController : MonoBehaviour
 
     public void newDropOffLocation()
     {
+        currShelf.GetComponent<Renderer>().material = null;
         currShelf.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
         float totalDistance = Vector3.Distance(pallet.position, currShelf.transform.position);
         float heightDifference = pallet.position.y - currShelf.transform.position.y;
-        Debug.Log(heightDifference);
+        Debug.Log(totalDistance);
         if (totalDistance < 1.5f && heightDifference > 0.2f && heightDifference < 0.3f)
         {
             pallet.position = new Vector3(currShelf.transform.position.x, currShelf.transform.position.y + 0.1f, currShelf.transform.position.z);
-            if (ColorUtility.TryParseHtmlString("#80604D", out originalColor))
-            {
-                currShelf.GetComponent<Renderer>().material.color = originalColor;
-            }
+            currShelf.GetComponent<Renderer>().material = shelfMaterial;
             if (onFourth)
             {
                 onFifth = true;
