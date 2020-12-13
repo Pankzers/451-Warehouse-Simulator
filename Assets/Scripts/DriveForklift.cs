@@ -24,7 +24,8 @@ public class DriveForklift : MonoBehaviour
     public bool collision;
     public bool draggingFront;
     public bool draggingForks;
-    public Transform selectedPallet;
+
+    public static Transform selectedPallet;
 
     public float dragMod = 1000000f;
 
@@ -304,8 +305,9 @@ public class DriveForklift : MonoBehaviour
         return false;
     }
 
-    public void pickUpPallet()
+    /*public void pickUpPallet()
     {
+        Matrix4x4 forksSceneMatrix = forksSceneNode.getCombinedMatrix();
         Matrix4x4 leftMatrix = leftFork.getNodeMatrix();
         Vector4 leftPosition = leftMatrix.GetColumn(3); 
         Matrix4x4 rightMatrix = rightFork.getNodeMatrix();
@@ -315,8 +317,36 @@ public class DriveForklift : MonoBehaviour
         float newY = leftPosition.y - 0.1f;
         float newZ = (leftPosition.z + rightPosition.z) / 2;
         selectedPallet.localPosition = new Vector3(newX, newY, newZ);
+        Vector3 forkUp = forksSceneMatrix.GetColumn(1).normalized;
+        Vector3 forkForward = forksSceneMatrix.GetColumn(2).normalized;
+        selectedPallet.localRotation = Quaternion.FromToRotation(Vector3.up, forkUp);
+        selectedPallet.localRotation *= Quaternion.FromToRotation(Vector3.forward, forkForward);
+
+    }*/
+
+    public void pickUpPallet()
+    {
+        Matrix4x4 forksSceneMatrix = forksSceneNode.getCombinedMatrix();
+        Matrix4x4 leftMatrix = leftFork.getNodeMatrix();
+        Vector3 leftPosition = leftMatrix.GetColumn(3);
+        Matrix4x4 rightMatrix = rightFork.getNodeMatrix();
+        Vector3 rightPosition = rightMatrix.GetColumn(3);
+        //float newX = (leftPosition.x + rightPosition.x) / 2;
+        float newX = leftPosition.x + 0.5f;
+        float newY = leftPosition.y - 0.1f;
+        float newZ = (leftPosition.z + rightPosition.z) / 2;
+        Vector3 forkup = forksSceneMatrix.GetColumn(1).normalized;
+        Vector3 forkforward = forksSceneMatrix.GetColumn(2).normalized;
+        Vector3 forkright = forksSceneMatrix.GetColumn(0).normalized;
+        leftPosition = (leftPosition + rightPosition) / 2;
+        //leftPosition -= forkforward * 0.3f;
+        leftPosition += forkright;
+        leftPosition -= forkup * 0.1f;
+        selectedPallet.localPosition = leftPosition;
         Vector4 newRotation = leftMatrix.GetColumn(2);
-        selectedPallet.localRotation = Quaternion.Euler(newRotation);
+
+        selectedPallet.localRotation = Quaternion.FromToRotation(Vector3.up, forkup);
+        selectedPallet.localRotation *= Quaternion.FromToRotation(Vector3.forward, forkforward);
     }
 
 }
