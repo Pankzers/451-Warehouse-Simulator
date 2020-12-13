@@ -26,6 +26,8 @@ public class DriveForklift : MonoBehaviour
     public bool draggingForks;
     public Transform selectedPallet;
 
+    public float dragMod = 1000000f;
+
     void Start()
     {
         Debug.Assert(forkliftCams != null);
@@ -71,26 +73,36 @@ public class DriveForklift : MonoBehaviour
         }
         if(Input.GetMouseButtonDown(0) && !Input.GetKey(KeyCode.LeftAlt))
         {
-            Ray ray = forkliftCams.getSecondaryCamRay();
-            bool leftFrontCheck = CheckRayPartIntersection(ray, leftFront);
-            Debug.Log(leftFrontCheck);
-            if (leftFrontCheck)
+            Ray ray = forkliftCams.getSecondaryCamRay(); 
+            if (CheckRayPartIntersection(ray, leftFront))
             {
                 draggingFront = true;
-            } //else if(CheckRayPartIntersection(ray, rightFront))
-            //{
-            //    draggingFront = true;
-            //} else if (CheckRayPartIntersection(ray, leftFork.gameObject))
-            //{
-            //    draggingForks = true;
-            //} else if (CheckRayPartIntersection(ray, rightFork.gameObject))
-            //{
-            //    draggingForks = true;
-            //}
+            } else if(CheckRayPartIntersection(ray, rightFront))
+            {
+                draggingFront = true;
+            } else if (CheckRayPartIntersection(ray, leftFork.gameObject))
+            {
+                draggingForks = true;
+            } else if (CheckRayPartIntersection(ray, rightFork.gameObject))
+            {
+                draggingForks = true;
+            }
         }
         if(draggingFront)
         {
-
+            Debug.Log("Dragging Front!");
+            Matrix4x4 nodeMatrix = frontEndSceneNode.getCombinedMatrix();
+            //Vector3 frontForward = nodeMatrix.GetColumn(2).normalized;
+            Vector3 frontRight = -nodeMatrix.GetColumn(2).normalized;
+            //Vector2 screenAxisDir = Vector2.zero;
+            //Vector2 screenMouseDir = Vector2.zero;
+            float xDist = Input.GetAxis("Mouse X");
+            //screenMouseDir.y = Input.GetAxis("Mouse Y");
+            //screenAxisDir.x = Vector3.Dot(frontForward, forkliftCams.mSecondaryCamera.transform.forward);
+            //screenAxisDir.y = Vector3.Dot(frontForward, forkliftCams.mSecondaryCamera.transform.up);
+            //float dist = Vector2.Dot(screenMouseDir, screenAxisDir.normalized) * dragMod;
+            Quaternion rot = Quaternion.AngleAxis(xDist, frontRight);
+            frontEndSceneNode.transform.localRotation = rot * frontEndSceneNode.transform.localRotation;
         }
         if(draggingForks)
         {
@@ -139,18 +151,14 @@ public class DriveForklift : MonoBehaviour
     }
     bool CheckRayPartIntersection(Ray ray, GameObject obj)
     {
-        //Vector3 test = new Vector3(1, 1, 1);
-
-        
         Vector3 rayOrigin = ray.origin;
         Vector3 rayDirection = ray.direction;
-        //Debug.Log(rayOrigin);
-        //Debug.Log(rayDirection);
-        //Debug.DrawRay(rayOrigin, rayDirection, Color.blue, 10);
         NodePrimitive node = obj.GetComponent<NodePrimitive>();
         Matrix4x4 trsMatrix = node.getNodeMatrix();
+        Matrix4x4 p = Matrix4x4.TRS(-node.Pivot, Quaternion.identity, Vector3.one);
+        trsMatrix = p * trsMatrix;
         /*
-         * CODE CREDIT TO CALVIN1602 until LINE 245
+         * CODE CREDIT TO CALVIN1602 until end of method
          * https://github.com/opengl-tutorials/ogl/blob/master/misc05_picking/misc05_picking_custom.cpp
          * OpenGL Tutorial Repository and Project
          * This is an adaptation of the code used in MP3 for detection of ray intersection with OBB (Oriented Bounding Box).
@@ -247,12 +255,6 @@ public class DriveForklift : MonoBehaviour
         }
         return true;
         //END CODE CREDIT TO CALVIN1602
-
-        //Matrix4x4 invtrsMatrix = trsMatrix.inverse;
-        //rayOrigin = invtrsMatrix * (rayOrigin-(Vector3)trsMatrix.GetColumn(3));
-        //rayDirection = (Vector3)(invtrsMatrix * rayDirection);
-        //Debug.DrawRay(rayOrigin, rayDirection*100, Color.red, 10);
-        return false;
     }
     
     public bool checkPalletCollision()
