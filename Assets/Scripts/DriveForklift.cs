@@ -302,7 +302,7 @@ public class DriveForklift : MonoBehaviour
                     bool fineCollisionRightFork = world.SAT.CheckCollision(rightFork.transform, rightFork.GetComponent<MeshFilter>().mesh, part, part.GetComponent<MeshFilter>().mesh);
                     if (fineCollisionLeftFork || fineCollisionRightFork)
                     {
-                        Debug.Log("Fine Collison");
+                        Debug.Log("Pick up pallet");
                         selectedPallet = palletXForm;
                         return true;
                     }
