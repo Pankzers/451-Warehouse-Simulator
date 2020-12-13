@@ -90,19 +90,23 @@ public class DriveForklift : MonoBehaviour
         }
         if(draggingFront)
         {
-            Debug.Log("Dragging Front!");
             Matrix4x4 nodeMatrix = frontEndSceneNode.getCombinedMatrix();
-            //Vector3 frontForward = nodeMatrix.GetColumn(2).normalized;
-            Vector3 frontRight = -nodeMatrix.GetColumn(2).normalized;
-            //Vector2 screenAxisDir = Vector2.zero;
-            //Vector2 screenMouseDir = Vector2.zero;
+            Vector3 frontForward = nodeMatrix.GetColumn(0).normalized;
+            Vector3 frontRight = -Vector3.forward;
+            Debug.DrawRay(nodeMatrix.GetColumn(3), frontRight, Color.yellow, 5);
+
             float xDist = Input.GetAxis("Mouse X");
-            //screenMouseDir.y = Input.GetAxis("Mouse Y");
-            //screenAxisDir.x = Vector3.Dot(frontForward, forkliftCams.mSecondaryCamera.transform.forward);
-            //screenAxisDir.y = Vector3.Dot(frontForward, forkliftCams.mSecondaryCamera.transform.up);
-            //float dist = Vector2.Dot(screenMouseDir, screenAxisDir.normalized) * dragMod;
-            Quaternion rot = Quaternion.AngleAxis(xDist, frontRight);
-            frontEndSceneNode.transform.localRotation = rot * frontEndSceneNode.transform.localRotation;
+            float yAngle = Mathf.Acos(Vector3.Dot(Vector3.up, frontForward)) * Mathf.Rad2Deg;
+            if (xDist < 0 && yAngle < 70)
+            {
+                xDist = 0;
+            }
+            if (xDist > 0 && yAngle > 102)
+            {
+                xDist = 0;
+            }
+            Quaternion rot = Quaternion.AngleAxis(xDist, -Vector3.forward);
+            frontEndSceneNode.transform.localRotation *= rot;
         }
         if(draggingForks)
         {
@@ -155,8 +159,23 @@ public class DriveForklift : MonoBehaviour
         Vector3 rayDirection = ray.direction;
         NodePrimitive node = obj.GetComponent<NodePrimitive>();
         Matrix4x4 trsMatrix = node.getNodeMatrix();
-        Matrix4x4 p = Matrix4x4.TRS(-node.Pivot, Quaternion.identity, Vector3.one);
-        trsMatrix = p * trsMatrix;
+        Vector3 nodePos = trsMatrix.GetColumn(3);
+        
+
+        Vector3 xAxis = trsMatrix.GetColumn(0).normalized;
+        Vector3 yAxis = trsMatrix.GetColumn(1).normalized;
+        Vector3 zAxis = trsMatrix.GetColumn(2).normalized;
+
+        
+
+        Debug.DrawRay(nodePos, xAxis, Color.red, 5);
+        Debug.DrawRay(nodePos, yAxis, Color.green, 5);
+        Debug.DrawRay(nodePos, zAxis, Color.blue, 5);
+
+        //nodePos += yAxis * 1.4f;
+
+        //Matrix4x4 p = Matrix4x4.TRS(-node.Pivot, Quaternion.identity, Vector3.one);
+        //trsMatrix = p * trsMatrix;
         /*
          * CODE CREDIT TO CALVIN1602 until end of method
          * https://github.com/opengl-tutorials/ogl/blob/master/misc05_picking/misc05_picking_custom.cpp
@@ -167,11 +186,16 @@ public class DriveForklift : MonoBehaviour
          */
         float tMin = 0.0f;
         float tMax = 1000.0f;
-        Vector3 nodePos = trsMatrix.GetColumn(3);
-        Vector3 xAxis = trsMatrix.GetColumn(0).normalized;
-        Vector3 yAxis = trsMatrix.GetColumn(1).normalized;
-        Vector3 zAxis = trsMatrix.GetColumn(2).normalized;
+        nodePos = trsMatrix.GetColumn(3);
+        xAxis = trsMatrix.GetColumn(0).normalized;
+        yAxis = trsMatrix.GetColumn(1).normalized;
+        zAxis = trsMatrix.GetColumn(2).normalized;
+        Debug.DrawRay(nodePos, xAxis, Color.red,5);
+        Debug.DrawRay(nodePos, yAxis, Color.green,5);
+        Debug.DrawRay(nodePos, zAxis, Color.blue,5);
         Bounds bound = obj.GetComponent<BoxCollider>().bounds;
+        //Vector3 minBound = bound.min;
+        //Vector3 maxBound = bound.max;
         Vector3 rayDelta = nodePos - rayOrigin;
         {
             
