@@ -90,17 +90,13 @@ public class DriveForklift : MonoBehaviour
         }
         if(draggingFront)
         {
-            //Debug.Log("Dragging Front!");
             Matrix4x4 nodeMatrix = frontEndSceneNode.getCombinedMatrix();
             Vector3 frontForward = nodeMatrix.GetColumn(0).normalized;
-            Vector3 frontRight = -nodeMatrix.GetColumn(2).normalized;
-            Vector3 frontUp = nodeMatrix.GetColumn(1).normalized;
-            //Vector2 screenAxisDir = Vector2.zero;
-            //Vector2 screenMouseDir = Vector2.zero;
+            Vector3 frontRight = -Vector3.forward;
+            Debug.DrawRay(nodeMatrix.GetColumn(3), frontRight, Color.yellow, 5);
+
             float xDist = Input.GetAxis("Mouse X");
-            //Debug.Log("xDist: " + xDist);
             float yAngle = Mathf.Acos(Vector3.Dot(Vector3.up, frontForward)) * Mathf.Rad2Deg;
-            //Debug.Log("Y Angle: " + yAngle);
             if (xDist < 0 && yAngle < 70)
             {
                 xDist = 0;
@@ -109,12 +105,8 @@ public class DriveForklift : MonoBehaviour
             {
                 xDist = 0;
             }
-                //screenMouseDir.y = Input.GetAxis("Mouse Y");
-                //screenAxisDir.x = Vector3.Dot(frontForward, forkliftCams.mSecondaryCamera.transform.forward);
-                //screenAxisDir.y = Vector3.Dot(frontForward, forkliftCams.mSecondaryCamera.transform.up);
-                //float dist = Vector2.Dot(screenMouseDir, screenAxisDir.normalized) * dragMod;
-                Quaternion rot = Quaternion.AngleAxis(xDist, frontRight);
-            frontEndSceneNode.transform.localRotation = rot * frontEndSceneNode.transform.localRotation;
+            Quaternion rot = Quaternion.AngleAxis(xDist, -Vector3.forward);
+            frontEndSceneNode.transform.localRotation *= rot;
         }
         if(draggingForks)
         {
