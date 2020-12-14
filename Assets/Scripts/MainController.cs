@@ -53,7 +53,7 @@ public class MainController : MonoBehaviour
             if (onFirst)
             {
                 currDropOffShelf = firstDropOffShelf;
-                nextPickUpCoordinates = new Vector3(secondPickUpShelf.transform.position.x, secondPickUpShelf.transform.position.y, secondPickUpShelf.transform.position.z);
+                nextPickUpCoordinates = new Vector3(secondPickUpShelf.transform.position.x, secondPickUpShelf.transform.position.y + 0.2f, secondPickUpShelf.transform.position.z);
                 if (onSecond)
                 {
                     currDropOffShelf = secondDropOffShelf;
@@ -104,6 +104,7 @@ public class MainController : MonoBehaviour
                 onSecond = true;
             }
             GameObject newPallet = Instantiate(palletPrefab, nextPickUpCoordinates, Quaternion.identity);
+            newPallet.transform.eulerAngles = new Vector3(newPallet.transform.eulerAngles.x, 90, newPallet.transform.eulerAngles.z);
             newPallet.transform.parent = palletParent;
         }
     }
