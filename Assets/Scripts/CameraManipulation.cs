@@ -67,11 +67,11 @@ public class CameraManipulation : MonoBehaviour
                         thetay = 0;
                     }
                 }
-                Quaternion q = Quaternion.AngleAxis(thetax, mMainCamera.transform.up);
-                Quaternion q2 = Quaternion.AngleAxis(thetay, mMainCamera.transform.right);
+                Quaternion q = Quaternion.AngleAxis(thetax, Vector3.up);
+                Quaternion q2 = Quaternion.AngleAxis(thetay, Vector3.right);
                 q = q2 * q;
                 Matrix4x4 r = Matrix4x4.TRS(Vector3.zero, q, Vector3.one);
-                Matrix4x4 invP = Matrix4x4.TRS(-1*((Vector3)mainCamNode.getCombinedMatrix().GetColumn(3)+defaultMainLookPoint), Quaternion.identity, Vector3.one);
+                Matrix4x4 invP = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
                 r = invP.inverse * r * invP;
                 Vector3 newCameraPos = r.MultiplyPoint(MainCamPos);
                 MainCamPos = newCameraPos;
