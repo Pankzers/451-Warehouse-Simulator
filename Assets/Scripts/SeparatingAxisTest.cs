@@ -282,6 +282,11 @@ public class SeparatingAxisTest : MonoBehaviour {
 
 	public Vector3[] GetVertices(Transform otherTransform, Mesh mesh, int correctVertCount = 8)
 	{
+		StaticWorldMesh worldMesh = otherTransform.GetComponent<StaticWorldMesh>();
+		if (worldMesh != null)
+        {
+			return worldMesh.vertices;
+        }
 		NodePrimitive node = otherTransform.GetComponent<NodePrimitive>();
 		Vector3[] vertices = mesh.vertices;
 		Vector3[] verts;
@@ -320,9 +325,9 @@ public class SeparatingAxisTest : MonoBehaviour {
 			//Vector3 z = parentMatrix.GetColumn(2);
 			axes = new[]
 			{
-				((Vector3)parentMatrix.GetColumn(2).normalized),
+				((Vector3)parentMatrix.GetColumn(0).normalized),
 				((Vector3)parentMatrix.GetColumn(1).normalized),
-				((Vector3)parentMatrix.GetColumn(0).normalized)
+				((Vector3)parentMatrix.GetColumn(2).normalized)
 			};
 			//Vector3 axisA = Vector3.Cross(Vector3.up, y.normalized);
 			//float angleA = Mathf.Acos(Vector3.Dot(Vector3.up, y.normalized)) * Mathf.Rad2Deg;
