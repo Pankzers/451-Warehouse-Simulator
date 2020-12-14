@@ -20,21 +20,26 @@ public class MainController : MonoBehaviour
 
     public GameObject palletPrefab;
     public Transform palletParent;
-    private static Transform pallet = null;
+    private Transform pallet = null;
 
     public Color originalColor;
     public Material shelfMaterial;
 
-    public RectTransform rt;
+    public Transform arrow = null;
+    public Transform forklift = null;
+    private DriveForklift forkDrive;
 
     void Start()
     {
-        rt = GameObject.Find("Arrow").GetComponent<RectTransform>();
+        Debug.Assert(arrow != null);
+        Debug.Assert(forklift != null);
+        //rt = GameObject.Find("Arrow").GetComponent<RectTransform>();
+        forkDrive = forklift.GetComponent<DriveForklift>();
     }
 
     void Update()
     {
-        pallet = DriveForklift.selectedPallet;
+        pallet = forkDrive.selectedPallet;
         if (pallet != null)
         {
             if (onFirst)
@@ -97,10 +102,17 @@ public class MainController : MonoBehaviour
 
     public void displayDropOffLocation()
     {
-        Vector3 objScreenPos = Camera.main.WorldToScreenPoint(currShelf.transform.position);
+        /*Vector3 objScreenPos = Camera.main.WorldToScreenPoint(currShelf.transform.position);
         Vector3 dir = (objScreenPos - rt.position).normalized;
         float angle = Mathf.Rad2Deg * Mathf.Atan2(dir.y, dir.x);
-        rt.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        rt.rotation = Quaternion.AngleAxis(angle, Vector3.forward);*/
+        Vector3 objectivePos = currShelf.transform.position;
+        objectivePos.y = 0;
+        Vector3 arrowPos = arrow.position;
+        arrowPos.y = 0;
+        Vector3 arrowDir = (objectivePos - arrowPos).normalized;
+        arrow.rotation = Quaternion.FromToRotation(Vector3.forward, arrowDir);
+        arrow.position = forklift.position + new Vector3(0, 0.5f, 0);
     }
 
 }
