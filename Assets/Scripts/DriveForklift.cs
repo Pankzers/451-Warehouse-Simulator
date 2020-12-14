@@ -142,8 +142,15 @@ public class DriveForklift : MonoBehaviour
             draggingFront = false;
             draggingForks = false;
         }
-        bool canPickUp = checkPalletCollision();
+        /*bool canPickUp = checkPalletCollision();
         if (canPickUp)
+        {
+            pickUpPallet();
+        }*/
+        if (selectedPallet != null)
+        {
+            pickUpPallet();
+        } else if (checkPalletCollision())
         {
             pickUpPallet();
         }
@@ -343,7 +350,7 @@ public class DriveForklift : MonoBehaviour
                 {
                     bool fineCollisionLeftFork = world.SAT.CheckCollision(leftFork.transform, leftFork.GetComponent<MeshFilter>().mesh, part, part.GetComponent<MeshFilter>().mesh);
                     bool fineCollisionRightFork = world.SAT.CheckCollision(rightFork.transform, rightFork.GetComponent<MeshFilter>().mesh, part, part.GetComponent<MeshFilter>().mesh);
-                    if (fineCollisionLeftFork || fineCollisionRightFork)
+                    if (fineCollisionLeftFork && fineCollisionRightFork)
                     {
                         Debug.Log("Pick up pallet");
                         selectedPallet = palletXForm;
