@@ -77,14 +77,23 @@ public class SeparatingAxisTest : MonoBehaviour {
 			Vector3.Cross(aAxes[2], bAxes[1]),
 			Vector3.Cross(aAxes[2], bAxes[2])
 		};
+		NodePrimitive node = a.GetComponent<NodePrimitive>();
+		if(node != null)
+        {
+			Matrix4x4 nodeMatrix = node.getNodeMatrix();
+			Vector3 nodePos = nodeMatrix.GetColumn(3);
+			Debug.DrawRay(nodePos, aAxes[0] * 2f, Color.red);
+			Debug.DrawRay(nodePos, aAxes[1] * 2f, Color.green);
+			Debug.DrawRay(nodePos, aAxes[2] * 2f, Color.blue);
 
+		}
 		//Debug.DrawRay(a.transform.position, aAxes[0] * 2f, Color.red);
 		//Debug.DrawRay(a.transform.position, aAxes[1] * 2f, Color.green);
 		//Debug.DrawRay(a.transform.position, aAxes[2] * 2f, Color.blue);
 
-		//Debug.DrawRay(b.transform.position, bAxes[0] * 2f, Color.red);
-		//Debug.DrawRay(b.transform.position, bAxes[1] * 2f, Color.green);
-		//Debug.DrawRay(b.transform.position, bAxes[2] * 2f, Color.blue);
+		Debug.DrawRay(b.transform.position, bAxes[0] * 2f, Color.red);
+		Debug.DrawRay(b.transform.position, bAxes[1] * 2f, Color.green);
+		Debug.DrawRay(b.transform.position, bAxes[2] * 2f, Color.blue);
 
 		int aAxesLength = aAxes.Length;
 		int bAxesLength = bAxes.Length;

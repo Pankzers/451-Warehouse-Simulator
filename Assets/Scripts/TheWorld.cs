@@ -65,6 +65,8 @@ public class TheWorld : MonoBehaviour
 
     private bool intersectColliders(Collider one, Collider two)
     {
+        //Debug.Log(one.bounds.min.x);
+
         return (one.bounds.min.x <= two.bounds.max.x && one.bounds.max.x >= two.bounds.min.x) &&
          (one.bounds.min.y <= two.bounds.max.y && one.bounds.max.y >= two.bounds.min.y) &&
          (one.bounds.min.z <= two.bounds.max.z && one.bounds.max.z >= two.bounds.min.z);
