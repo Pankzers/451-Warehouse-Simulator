@@ -25,7 +25,7 @@ public class DriveForklift : MonoBehaviour
     public bool draggingFront;
     public bool draggingForks;
 
-    public static Transform selectedPallet;
+    public Transform selectedPallet;
 
     public float dragMod = 50f;
 
