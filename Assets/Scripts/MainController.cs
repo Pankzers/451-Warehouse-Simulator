@@ -111,12 +111,11 @@ public class MainController : MonoBehaviour
 
     public void displayDropOffLocation()
     {
-<<<<<<< HEAD
-        Vector3 objScreenPos = Camera.main.WorldToScreenPoint(currDropOffShelf.transform.position);
-        Vector3 dir = (objScreenPos - rt.position).normalized;
-        float angle = Mathf.Rad2Deg * Mathf.Atan2(dir.y, dir.x);
-        rt.rotation = Quaternion.AngleAxis(angle, Vector3.forward);*/
-        Vector3 objectivePos = currShelf.transform.position;
+        //Vector3 objScreenPos = Camera.main.WorldToScreenPoint(currDropOffShelf.transform.position);
+        //Vector3 dir = (objScreenPos - rt.position).normalized;
+        //float angle = Mathf.Rad2Deg * Mathf.Atan2(dir.y, dir.x);
+        //rt.rotation = Quaternion.AngleAxis(angle, Vector3.forward);*/
+        Vector3 objectivePos = currDropOffShelf.transform.position;
         objectivePos.y = 0;
         Vector3 arrowPos = arrow.position;
         arrowPos.y = 0;

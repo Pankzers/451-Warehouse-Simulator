@@ -2208,11 +2208,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-<<<<<<< HEAD
-  - {fileID: 548137307}
-=======
   - {fileID: 1023125713}
->>>>>>> main
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3238,8 +3234,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4, type: 3}
-<<<<<<< HEAD
-=======
 --- !u!21 &297405412
 Material:
   serializedVersion: 6
@@ -3391,7 +3385,6 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0.99999994}
     - _EmissionColorUI: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColorWithMapUI: {r: 1, g: 1, b: 1, a: 1}
->>>>>>> main
 --- !u!1001 &328012188
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4442,11 +4435,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-<<<<<<< HEAD
-  - {fileID: 1091027634}
-=======
   - {fileID: 59828555}
->>>>>>> main
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4597,168 +4586,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 5.1259727, y: 5.1959305, z: 3.3679237}
   m_Center: {x: -8.300318, y: -0.45822048, z: -0.000005722046}
-<<<<<<< HEAD
---- !u!1 &437217985 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7432852558745590935, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
-    type: 3}
-  m_PrefabInstance: {fileID: 730151334}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &451000898
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1092648541}
-    m_Modifications:
-    - target: {fileID: 7432852557788354840, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
-        type: 3}
-      propertyPath: m_Name
-      value: ShelvingUnit (11)
-      objectReference: {fileID: 0}
-    - target: {fileID: 7432852557788354843, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -14.553476
-      objectReference: {fileID: 0}
-    - target: {fileID: 7432852557788354843, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7432852557788354843, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7432852557788354843, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7432852557788354843, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7432852557788354843, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7432852557788354843, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7432852557788354843, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 7432852557788354843, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7432852557788354843, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7432852557788354843, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4, type: 3}
---- !u!21 &461564933
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Frontend (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance)
-  m_Shader: {fileID: 4800000, guid: 5f84bb511721de64ead7b08f3b171f9e, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _BumpMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _DetailAlbedoMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _DetailMask:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _DetailNormalMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _EmissionMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: e661eda42c49bea44a4a37785b995927, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MetallicGlossMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _OcclusionMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _ParallaxMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - _BumpScale: 1
-    - _Cutoff: 0.5
-    - _DetailNormalMapScale: 1
-    - _DstBlend: 0
-    - _GlossMapScale: 1
-    - _Glossiness: 0.5
-    - _GlossyReflections: 1
-    - _Metallic: 0
-    - _Mode: 0
-    - _OcclusionStrength: 1
-    - _Parallax: 0.02
-    - _SmoothnessTextureChannel: 0
-    - _SpecularHighlights: 1
-    - _SrcBlend: 1
-    - _UVSec: 0
-    - _ZWrite: 1
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
---- !u!1001 &461735823
-=======
---- !u!1001 &451000898
->>>>>>> main
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -7051,8 +6879,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 5.1259727, y: 5.1959305, z: 3.3679237}
   m_Center: {x: -8.300318, y: -0.45822048, z: -0.000005722046}
-<<<<<<< HEAD
-=======
 --- !u!21 &804435845
 Material:
   serializedVersion: 6
@@ -7135,7 +6961,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
->>>>>>> main
 --- !u!1001 &806939272
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7483,11 +7308,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-<<<<<<< HEAD
-  - {fileID: 522268741}
-=======
   - {fileID: 1691376126}
->>>>>>> main
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9129,11 +8950,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 5.1259727, y: 5.1959305, z: 3.3679237}
   m_Center: {x: -8.300318, y: -0.45822048, z: -0.000005722046}
-<<<<<<< HEAD
---- !u!21 &1031345550
-=======
 --- !u!21 &1023125713
->>>>>>> main
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -9147,19 +8964,10 @@ Material:
     (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
     (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
     (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-<<<<<<< HEAD
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance) (Instance) (Instance) (Instance) (Instance) (Instance) (Instance)
-    (Instance)
-  m_Shader: {fileID: 4800000, guid: 6c8460b487dd19644a21292643732ad5, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-=======
     (Instance)
   m_Shader: {fileID: 4800000, guid: 5f84bb511721de64ead7b08f3b171f9e, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
->>>>>>> main
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -10869,11 +10677,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-<<<<<<< HEAD
-  - {fileID: 670543205}
-=======
   - {fileID: 26411399}
->>>>>>> main
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12898,11 +12702,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-<<<<<<< HEAD
-  - {fileID: 1031345550}
-=======
   - {fileID: 882195869}
->>>>>>> main
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13506,11 +13306,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-<<<<<<< HEAD
-  - {fileID: 1587858204}
-=======
   - {fileID: 297405412}
->>>>>>> main
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -15600,11 +15396,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-<<<<<<< HEAD
-  - {fileID: 1801531589}
-=======
   - {fileID: 804435845}
->>>>>>> main
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -15741,11 +15533,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-<<<<<<< HEAD
-  - {fileID: 900743228}
-=======
   - {fileID: 1268680154}
->>>>>>> main
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -16762,11 +16550,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-<<<<<<< HEAD
-  - {fileID: 461564933}
-=======
   - {fileID: 399681411}
->>>>>>> main
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
