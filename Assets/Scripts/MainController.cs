@@ -111,7 +111,6 @@ public class MainController : MonoBehaviour
 
     public void displayDropOffLocation()
     {
-<<<<<<< HEAD
         Vector3 objScreenPos = Camera.main.WorldToScreenPoint(currDropOffShelf.transform.position);
         Vector3 dir = (objScreenPos - rt.position).normalized;
         float angle = Mathf.Rad2Deg * Mathf.Atan2(dir.y, dir.x);
