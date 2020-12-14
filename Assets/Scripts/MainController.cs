@@ -25,9 +25,11 @@ public class MainController : MonoBehaviour
     public Color originalColor;
     public Material shelfMaterial;
 
+    public RectTransform rt;
+
     void Start()
     {
-
+        rt = GameObject.Find("Arrow").GetComponent<RectTransform>();
     }
 
     void Update()
@@ -55,6 +57,7 @@ public class MainController : MonoBehaviour
                     }
                 }
             }
+            displayDropOffLocation();
             newDropOffLocation();
         }
     }
@@ -90,4 +93,14 @@ public class MainController : MonoBehaviour
             newPallet.transform.parent = palletParent;
         }
     }
+
+
+    public void displayDropOffLocation()
+    {
+        Vector3 objScreenPos = Camera.main.WorldToScreenPoint(currShelf.transform.position);
+        Vector3 dir = (objScreenPos - rt.position).normalized;
+        float angle = Mathf.Rad2Deg * Mathf.Atan2(dir.y, dir.x);
+        rt.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+    }
+
 }
