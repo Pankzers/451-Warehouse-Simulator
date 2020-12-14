@@ -5,12 +5,18 @@ using UnityEngine;
 public class MainController : MonoBehaviour
 {
 
-    public GameObject firstShelf;
-    public GameObject secondShelf;
-    public GameObject thirdShelf;
-    public GameObject fourthShelf;
-    public GameObject fifthShelf;
-    public GameObject currShelf;
+    public GameObject secondPickUpShelf;
+    public GameObject thirdPickUpShelf;
+    public GameObject fourthPickUpShelf;
+    public GameObject fifthPickUpShelf;
+
+    public GameObject firstDropOffShelf;
+    public GameObject secondDropOffShelf;
+    public GameObject thirdDropOffShelf;
+    public GameObject fourthDropOffShelf;
+    public GameObject fifthDropOffShelf;
+
+    public GameObject currDropOffShelf;
 
     public bool onFirst = true;
     public bool onSecond = false;
@@ -27,6 +33,8 @@ public class MainController : MonoBehaviour
 
     public RectTransform rt;
 
+    public Vector3 nextPickUpCoordinates;
+
     void Start()
     {
         rt = GameObject.Find("Arrow").GetComponent<RectTransform>();
@@ -39,19 +47,20 @@ public class MainController : MonoBehaviour
         {
             if (onFirst)
             {
-                currShelf = firstShelf;
+                currDropOffShelf = firstDropOffShelf;
+                nextPickUpCoordinates = new Vector3(secondPickUpShelf.transform.position.x, secondPickUpShelf.transform.position.y, secondPickUpShelf.transform.position.z);
                 if (onSecond)
                 {
-                    currShelf = secondShelf;
+                    currDropOffShelf = secondDropOffShelf;
                     if (onThird)
                     {
-                        currShelf = thirdShelf;
+                        currDropOffShelf = thirdDropOffShelf;
                         if (onFourth)
                         {
-                            currShelf = fourthShelf;
+                            currDropOffShelf = fourthDropOffShelf;
                             if (onFifth)
                             {
-                                currShelf = fifthShelf;
+                                currDropOffShelf = fifthDropOffShelf;
                             }
                         }
                     }
@@ -64,15 +73,15 @@ public class MainController : MonoBehaviour
 
     public void newDropOffLocation()
     {
-        currShelf.GetComponent<Renderer>().material = null;
-        currShelf.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
-        float totalDistance = Vector3.Distance(pallet.position, currShelf.transform.position);
-        float heightDifference = pallet.position.y - currShelf.transform.position.y;
+        currDropOffShelf.GetComponent<Renderer>().material = null;
+        currDropOffShelf.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
+        float totalDistance = Vector3.Distance(pallet.position, currDropOffShelf.transform.position);
+        float heightDifference = pallet.position.y - currDropOffShelf.transform.position.y;
         Debug.Log(totalDistance);
         if (totalDistance < 1.5f && heightDifference > 0.2f && heightDifference < 0.3f)
         {
-            pallet.position = new Vector3(currShelf.transform.position.x, currShelf.transform.position.y + 0.1f, currShelf.transform.position.z);
-            currShelf.GetComponent<Renderer>().material = shelfMaterial;
+            pallet.position = new Vector3(currDropOffShelf.transform.position.x, currDropOffShelf.transform.position.y + 0.2f, currDropOffShelf.transform.position.z);
+            currDropOffShelf.GetComponent<Renderer>().material = shelfMaterial;
             if (onFourth)
             {
                 onFifth = true;
@@ -89,7 +98,7 @@ public class MainController : MonoBehaviour
             {
                 onSecond = true;
             }
-            GameObject newPallet = Instantiate(palletPrefab, new Vector3(5.74f, 0.51f, 0), Quaternion.identity);
+            GameObject newPallet = Instantiate(palletPrefab, nextPickUpCoordinates, Quaternion.identity);
             newPallet.transform.parent = palletParent;
         }
     }
@@ -97,7 +106,7 @@ public class MainController : MonoBehaviour
 
     public void displayDropOffLocation()
     {
-        Vector3 objScreenPos = Camera.main.WorldToScreenPoint(currShelf.transform.position);
+        Vector3 objScreenPos = Camera.main.WorldToScreenPoint(currDropOffShelf.transform.position);
         Vector3 dir = (objScreenPos - rt.position).normalized;
         float angle = Mathf.Rad2Deg * Mathf.Atan2(dir.y, dir.x);
         rt.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
