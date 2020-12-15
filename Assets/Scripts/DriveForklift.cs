@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DriveForklift : MonoBehaviour
 {
@@ -37,8 +38,10 @@ public class DriveForklift : MonoBehaviour
     public float minZ = -50f;
     public float acceleration = 10f;
     public float friction = 0.02f;
-    private float velocity = 0;
-    public bool velocityToggle = true;
+    private float velocity = 0; 
+
+    public Toggle velocityToggleObject;
+    public bool velocityToggle;
 
     void Start()
     {
@@ -51,6 +54,13 @@ public class DriveForklift : MonoBehaviour
 
     void Update()
     {
+        if (velocityToggleObject.isOn)
+        {
+            velocityToggle = true;
+        } else
+        {
+            velocityToggle = false;
+        }
         if(velocityToggle)
         {
             if (Mathf.Abs(velocity) < 0.01f)
