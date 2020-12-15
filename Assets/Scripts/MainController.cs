@@ -59,6 +59,7 @@ public class MainController : MonoBehaviour
 
     void Start()
     {
+        timeRemaining = 180;
         Debug.Assert(arrow != null);
         Debug.Assert(forklift != null);
         //rt = GameObject.Find("Arrow").GetComponent<RectTransform>();

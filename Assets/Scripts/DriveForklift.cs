@@ -139,19 +139,19 @@ public class DriveForklift : MonoBehaviour
             if (Input.GetMouseButtonDown(0) && !Input.GetKey(KeyCode.LeftAlt))
             {
                 Ray ray = forkliftCams.getSecondaryCamRay();
-                if (CheckRayPartIntersection(ray, leftFront))
+                if (CheckRayPartIntersection(ray, rightFront))
                 {
                     draggingFront = true;
                 }
-                else if (CheckRayPartIntersection(ray, rightFront))
+                else if (CheckRayPartIntersection(ray, rightFork.gameObject))
+                {
+                    draggingForks = true;
+                }
+                else if (CheckRayPartIntersection(ray, leftFront))
                 {
                     draggingFront = true;
                 }
                 else if (CheckRayPartIntersection(ray, leftFork.gameObject))
-                {
-                    draggingForks = true;
-                }
-                else if (CheckRayPartIntersection(ray, rightFork.gameObject))
                 {
                     draggingForks = true;
                 }
