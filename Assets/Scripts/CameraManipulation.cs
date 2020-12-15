@@ -101,7 +101,7 @@ public class CameraManipulation : MonoBehaviour
             Matrix4x4 parentNodeMatrix = node.getCombinedMatrix();
             cam.transform.localPosition = parentNodeMatrix * CamPos + parentNodeMatrix.GetColumn(3);
             //V = (Vector3)parentNodeMatrix.GetColumn(3) - cam.transform.localPosition;
-            V = (Vector3)parentNodeMatrix.GetColumn(3) + LookPoint - cam.transform.localPosition;
+            V = (Vector3)parentNodeMatrix.GetColumn(3) + (Vector3)(parentNodeMatrix*LookPoint) - cam.transform.localPosition;
             //Debug.Log("LP: " + parentNodeMatrix.GetColumn(3));
         } else
         {
