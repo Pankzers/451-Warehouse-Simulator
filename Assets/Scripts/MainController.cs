@@ -163,7 +163,8 @@ public class MainController : MonoBehaviour
                 prevPickUpShelf = currPickUpShelf;
                 newPallet = Instantiate(palletPrefab, nextPickUpCoordinates, Quaternion.identity);
                 newPallet.transform.eulerAngles = new Vector3(newPallet.transform.eulerAngles.x, 90, newPallet.transform.eulerAngles.z);
-                newPallet.transform.parent = palletParent;
+                newPallet.transform.SetParent(palletParent);
+                //palletParent.
             }
         }
     }
