@@ -128,6 +128,7 @@ public class MainController : MonoBehaviour
         checkNewPalletLocation();
         if (done)
         {
+            arrow.gameObject.SetActive(false);
             endGame();
             statusText.text = "Drop-offs completed: 5 / 5";
         }
