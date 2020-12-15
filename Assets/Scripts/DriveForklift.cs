@@ -141,8 +141,10 @@ public class DriveForklift : MonoBehaviour
         frameSceneNode.CompositeXform(ref i);
         //SERIOUSLY IF THIS IS NOT UPDATED COLLISION DOES NOT WORK
 
-        bool canPickUp = checkPalletCollision();
-        if (canPickUp)
+        if (selectedPallet != null)
+        {
+            pickUpPallet();
+        } else if (checkPalletCollision())
         {
             pickUpPallet();
         }
@@ -346,7 +348,7 @@ public class DriveForklift : MonoBehaviour
                 {
                     bool fineCollisionLeftFork = world.SAT.CheckCollision(leftFork.transform, leftFork.GetComponent<MeshFilter>().mesh, part, part.GetComponent<MeshFilter>().mesh);
                     bool fineCollisionRightFork = world.SAT.CheckCollision(rightFork.transform, rightFork.GetComponent<MeshFilter>().mesh, part, part.GetComponent<MeshFilter>().mesh);
-                    if (fineCollisionLeftFork || fineCollisionRightFork)
+                    if (fineCollisionLeftFork && fineCollisionRightFork)
                     {
                         Debug.Log("Pick up pallet");
                         selectedPallet = palletXForm;

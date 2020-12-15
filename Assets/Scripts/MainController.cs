@@ -10,6 +10,9 @@ public class MainController : MonoBehaviour
     public GameObject fourthPickUpShelf;
     public GameObject fifthPickUpShelf;
 
+    public GameObject currPickUpShelf;
+    public GameObject prevPickUpShelf;
+
     public GameObject firstDropOffShelf;
     public GameObject secondDropOffShelf;
     public GameObject thirdDropOffShelf;
@@ -23,12 +26,14 @@ public class MainController : MonoBehaviour
     public bool onThird = false;
     public bool onFourth = false;
     public bool onFifth = false;
+    public bool done = false;
 
     public GameObject palletPrefab;
     public Transform palletParent;
     private Transform pallet = null;
+    public GameObject newPallet;
 
-    public Color originalColor;
+    public Color pickUpShelfColor;
     public Material shelfMaterial;
 
     public Transform arrow = null;
@@ -48,21 +53,28 @@ public class MainController : MonoBehaviour
     void Update()
     {
         pallet = forkDrive.selectedPallet;
-        if (pallet != null)
+        if (pallet != null && !done)
         {
             if (onFirst)
             {
                 currDropOffShelf = firstDropOffShelf;
-                nextPickUpCoordinates = new Vector3(secondPickUpShelf.transform.position.x, secondPickUpShelf.transform.position.y, secondPickUpShelf.transform.position.z);
+                nextPickUpCoordinates = new Vector3(secondPickUpShelf.transform.position.x, secondPickUpShelf.transform.position.y + 0.2f, secondPickUpShelf.transform.position.z);
+                currPickUpShelf = secondPickUpShelf;
                 if (onSecond)
                 {
                     currDropOffShelf = secondDropOffShelf;
+                    nextPickUpCoordinates = new Vector3(thirdPickUpShelf.transform.position.x, thirdPickUpShelf.transform.position.y + 0.2f, thirdPickUpShelf.transform.position.z);
+                    currPickUpShelf = thirdPickUpShelf;
                     if (onThird)
                     {
                         currDropOffShelf = thirdDropOffShelf;
+                        nextPickUpCoordinates = new Vector3(fourthPickUpShelf.transform.position.x, fourthPickUpShelf.transform.position.y + 0.2f, fourthPickUpShelf.transform.position.z);
+                        currPickUpShelf = fourthPickUpShelf;
                         if (onFourth)
                         {
                             currDropOffShelf = fourthDropOffShelf;
+                            nextPickUpCoordinates = new Vector3(fifthPickUpShelf.transform.position.x, fifthPickUpShelf.transform.position.y + 0.2f, fifthPickUpShelf.transform.position.z);
+                            currPickUpShelf = fifthPickUpShelf;
                             if (onFifth)
                             {
                                 currDropOffShelf = fifthDropOffShelf;
@@ -73,6 +85,11 @@ public class MainController : MonoBehaviour
             }
             displayDropOffLocation();
             newDropOffLocation();
+        }
+        checkNewPalletLocation();
+        if (done)
+        {
+            endGame();
         }
     }
 
@@ -87,6 +104,12 @@ public class MainController : MonoBehaviour
         {
             pallet.position = new Vector3(currDropOffShelf.transform.position.x, currDropOffShelf.transform.position.y + 0.2f, currDropOffShelf.transform.position.z);
             currDropOffShelf.GetComponent<Renderer>().material = shelfMaterial;
+            forkDrive.selectedPallet.parent = null;
+            forkDrive.selectedPallet = null;
+            if (onFifth)
+            {
+                done = true;
+            }
             if (onFourth)
             {
                 onFifth = true;
@@ -103,8 +126,13 @@ public class MainController : MonoBehaviour
             {
                 onSecond = true;
             }
-            GameObject newPallet = Instantiate(palletPrefab, nextPickUpCoordinates, Quaternion.identity);
-            newPallet.transform.parent = palletParent;
+            if (!done)
+            {
+                prevPickUpShelf = currPickUpShelf;
+                newPallet = Instantiate(palletPrefab, nextPickUpCoordinates, Quaternion.identity);
+                newPallet.transform.eulerAngles = new Vector3(newPallet.transform.eulerAngles.x, 90, newPallet.transform.eulerAngles.z);
+                newPallet.transform.parent = palletParent;
+            }
         }
     }
 
@@ -122,6 +150,32 @@ public class MainController : MonoBehaviour
         Vector3 arrowDir = (objectivePos - arrowPos).normalized;
         arrow.rotation = Quaternion.FromToRotation(Vector3.forward, arrowDir);
         arrow.position = forklift.position + new Vector3(0, 0.5f, 0);
+    }
+
+    public void checkNewPalletLocation()
+    {
+        if (newPallet != null && newPallet.transform.position == nextPickUpCoordinates)
+        {
+            if (ColorUtility.TryParseHtmlString("#FFA500", out pickUpShelfColor))
+            {
+                currPickUpShelf.GetComponent<Renderer>().material = null;
+                currPickUpShelf.GetComponent<Renderer>().material.color = pickUpShelfColor;
+                Debug.Log("Here");
+            }
+        }
+        else
+        {
+            if (prevPickUpShelf != null)
+            {
+                Debug.Log("Not Here");
+                prevPickUpShelf.GetComponent<Renderer>().material = shelfMaterial;
+            }
+        }
+    }
+
+    public void endGame()
+    {
+
     }
 
 }
