@@ -48,7 +48,7 @@ public class MainController : MonoBehaviour
     public Text endMessageText;
     public GameObject endMessage;
 
-    public float timeRemaining = 420;
+    public float timeRemaining = 180;
     public bool timerIsRunning = false;
     public Text timerText;
 
