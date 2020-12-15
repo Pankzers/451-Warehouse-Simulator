@@ -4639,6 +4639,8 @@ MonoBehaviour:
   selectedPallet: {fileID: 0}
   dragMod: 0.01
   controller: {fileID: 68584051}
+  acceleration: 10
+  friction: 0.985
 --- !u!114 &400660509
 MonoBehaviour:
   m_ObjectHideFlags: 0
