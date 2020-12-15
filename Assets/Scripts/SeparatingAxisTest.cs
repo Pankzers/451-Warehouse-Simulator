@@ -5,18 +5,15 @@ using System.Collections.Generic;
 
 public class SeparatingAxisTest : MonoBehaviour {
 
-	// References
-	// Getting the Right Axes to Test with
-	//https://gamedev.stackexchange.com/questions/44500/how-many-and-which-axes-to-use-for-3d-obb-collision-with-sat/
-
-	//Unity Code, that nearly worked, but registered collisions incorrectly in some cases
-	//http://thegoldenmule.com/blog/2013/12/supercolliders-in-unity/
-
-	//[SerializeField]
-	//private Cube _cubeA;
-
-	//[SerializeField]
-	//private Cube _cubeB;
+	/* References
+	 * CODE CREDIT TO:
+	 * irixapps (2017) 3D Separating Axis Theorem implementation in Unity, (Version 1.07) [Unity Project and Sourcecode]. https://unitylist.com/p/5uc/Unity-Separating-Axis-SAT
+	 * 
+	 * Getting the Right Axes to Test with
+	 * https://gamedev.stackexchange.com/questions/44500/how-many-and-which-axes-to-use-for-3d-obb-collision-with-sat/
+	 * 
+	 * Unity Code, that nearly worked, but registered collisions incorrectly in some cases
+	 * http://thegoldenmule.com/blog/2013/12/supercolliders-in-unity/ */
 
 	Vector3[] aAxes;
 	Vector3[] bAxes;
@@ -24,37 +21,9 @@ public class SeparatingAxisTest : MonoBehaviour {
 	Vector3[] aVertices;
 	Vector3[] bVertices;
 
-	//float minOverlap = 0;
-	//Vector3 minOverlapAxis = Vector3.zero;
-
-	//List<Vector3> penetrationAxes;
-	//List<float> penetrationAxesDistance;
-
-	// Use this for initialization
-	void Start () {
-
-	}
-
-	// Update is called once per frame
-	void Update () {
-
-		//if ( CheckCollision(_cubeA, _cubeB))
-		//{
-		//	_cubeA.Hit = _cubeB.Hit = true;
-
-		//}
-		//else
-		//{
-		//	_cubeA.Hit = _cubeB.Hit = false;
-		//}
-
-
-	}
 
 	public bool CheckCollision( Transform a, Mesh aMesh, Transform b, Mesh bMesh)
 	{
-		//minOverlap = 0;
-		//minOverlapAxis = Vector3.zero;
 
 		aAxes = GetAxes(a);
 		bAxes = GetAxes(b);
@@ -82,18 +51,8 @@ public class SeparatingAxisTest : MonoBehaviour {
         {
 			Matrix4x4 nodeMatrix = node.getNodeMatrix();
 			Vector3 nodePos = nodeMatrix.GetColumn(3);
-			//Debug.DrawRay(nodePos, aAxes[0] * 2f, Color.red);
-			//Debug.DrawRay(nodePos, aAxes[1] * 2f, Color.green);
-			//Debug.DrawRay(nodePos, aAxes[2] * 2f, Color.blue);
 
 		}
-		//Debug.DrawRay(a.transform.position, aAxes[0] * 2f, Color.red);
-		//Debug.DrawRay(a.transform.position, aAxes[1] * 2f, Color.green);
-		//Debug.DrawRay(a.transform.position, aAxes[2] * 2f, Color.blue);
-
-		//Debug.DrawRay(b.transform.position, bAxes[0] * 2f, Color.red);
-		//Debug.DrawRay(b.transform.position, bAxes[1] * 2f, Color.green);
-		//Debug.DrawRay(b.transform.position, bAxes[2] * 2f, Color.blue);
 
 		int aAxesLength = aAxes.Length;
 		int bAxesLength = bAxes.Length;
@@ -103,9 +62,6 @@ public class SeparatingAxisTest : MonoBehaviour {
 
 		int aVertsLength = aVertices.Length;
 		int bVertsLength = bVertices.Length;
-
-		//penetrationAxes = new List<Vector3>();
-		//penetrationAxesDistance = new List<float>();
 
 		bool hasOverlap = false;
 
@@ -118,13 +74,10 @@ public class SeparatingAxisTest : MonoBehaviour {
 			hasOverlap = true;
 		}
 
-		// Penetration can be seen here, but its not reliable 
-		//Debug.Log(minOverlap+" : "+minOverlapAxis);
-
 		return hasOverlap;
 	}
 
-	/// Detects whether or not there is overlap on all separating axes.
+	// Detects whether or not there is overlap on all separating axes.
 	private bool ProjectionHasOverlap(
 		Transform aTransform,
 		Transform bTransform,
@@ -141,9 +94,6 @@ public class SeparatingAxisTest : MonoBehaviour {
 		Color aColor,
 		Color bColor)
 	{
-		//bool hasOverlap = true;
-
-		//minOverlap = float.PositiveInfinity;
 
 		for (int i = 0; i < aAxesLength; i++)
 		{
@@ -188,18 +138,6 @@ public class SeparatingAxisTest : MonoBehaviour {
 			}
 
 			float overlap = FindOverlap(aProjMin, aProjMax, bProjMin, bProjMax);
-
-			//if ( overlap < minOverlap )
-			{
-				//minOverlap = overlap;
-				//minOverlapAxis = axis;
-
-				//penetrationAxes.Add(axis);
-				//penetrationAxesDistance.Add(overlap);
-
-			}
-
-			//Debug.Log(overlap);
 
 			if (overlap <= 0)
 			{
@@ -253,7 +191,6 @@ public class SeparatingAxisTest : MonoBehaviour {
 			for (int j = 0; j < dupArray.Length; j++)
 			{
 				dupArray[j] = (Vector3)(parentMatrix * dupArray[j]) + posOffset;
-				//dupArray[j] = parentMatrix * dupArray[j];
 			}
 		}
 		
@@ -320,18 +257,12 @@ public class SeparatingAxisTest : MonoBehaviour {
 		} else
         {
 			Matrix4x4 parentMatrix = node.getNodeMatrix();
-			//Vector3 x = parentMatrix.GetColumn(0);
-			//Vector3 y = parentMatrix.GetColumn(1);
-			//Vector3 z = parentMatrix.GetColumn(2);
 			axes = new[]
 			{
 				((Vector3)parentMatrix.GetColumn(0).normalized),
 				((Vector3)parentMatrix.GetColumn(1).normalized),
 				((Vector3)parentMatrix.GetColumn(2).normalized)
 			};
-			//Vector3 axisA = Vector3.Cross(Vector3.up, y.normalized);
-			//float angleA = Mathf.Acos(Vector3.Dot(Vector3.up, y.normalized)) * Mathf.Rad2Deg;
-			//Quaternion rotation = Quaternion.AngleAxis(angleA, axisA);
 
 		}
 		
