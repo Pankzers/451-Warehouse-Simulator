@@ -166,17 +166,15 @@ public class DriveForklift : MonoBehaviour
         Matrix4x4 i = Matrix4x4.identity;
         frameSceneNode.CompositeXform(ref i);
         //SERIOUSLY IF THIS IS NOT UPDATED COLLISION DOES NOT WORK
-
-        if (selectedPallet != null)
-        {
-            pickUpPallet();
-        } else if (checkPalletCollision())
-        {
-            pickUpPallet();
-        }
         if (movedForward || movedBackward || rotatedLeft || rotatedRight || frontMoved || forksMoved)
         {
-            if (checkShelfCollision())
+            Transform palletCollision = checkPalletCollision();
+            bool shelfCollision = checkShelfCollision();
+            if (selectedPallet != null)
+            {
+                pickUpPallet();
+            }
+            if((palletCollision != null && palletCollision != selectedPallet) || shelfCollision)
             {
                 if (movedForward)
                 {
@@ -203,6 +201,7 @@ public class DriveForklift : MonoBehaviour
                     forksSceneNode.transform.localPosition = lastForksPosition;
                 }
             }
+
         }
         
         forkliftCams.UpdateCameras();
@@ -368,29 +367,58 @@ public class DriveForklift : MonoBehaviour
         //END CODE CREDIT TO CALVIN1602
     }
     
-    public bool checkPalletCollision()
+    public Transform checkPalletCollision()
     {
         ArrayList toTest = world.testPalletCollision(transform);
-        Debug.Log(toTest.Count);
+        Vector3 forksPos = (leftFork.getNodeMatrix().GetColumn(3) + rightFork.getNodeMatrix().GetColumn(3)) / 2;
+        //Debug.Log(toTest.Count);
+        
         foreach (Transform palletXForm in toTest)
         {
-            Debug.Log(palletXForm.name);
+            if(palletXForm == selectedPallet)
+            {
+                return selectedPallet;
+            }
+            Vector3 deltaVec = Vector3.zero;
+            float dist = 10;
+            float dirVal = -1000;
+            //Debug.Log(palletXForm.name);
+
             foreach (Transform partGroup in palletXForm)
             {
+                deltaVec = Vector3.zero;
+                if(partGroup.name == "Top")
+                {
+                    deltaVec = partGroup.position - forksPos;
+                    dist = deltaVec.magnitude;
+                    dirVal = Vector3.Dot(deltaVec, Vector3.up);
+                }
                 foreach (Transform part in partGroup)
                 {
                     bool fineCollisionLeftFork = world.SAT.CheckCollision(leftFork.transform, leftFork.GetComponent<MeshFilter>().mesh, part, part.GetComponent<MeshFilter>().mesh);
                     bool fineCollisionRightFork = world.SAT.CheckCollision(rightFork.transform, rightFork.GetComponent<MeshFilter>().mesh, part, part.GetComponent<MeshFilter>().mesh);
-                    if (fineCollisionLeftFork && fineCollisionRightFork)
+                    if(fineCollisionLeftFork || fineCollisionRightFork)
                     {
-                        Debug.Log("Pick up pallet");
-                        selectedPallet = palletXForm;
-                        return true;
+                        if(dist < 1 && dirVal > 0)
+                        {
+                            selectedPallet = palletXForm;
+                            return selectedPallet;
+                        }
+                        return palletXForm;
                     }
+                    //if (fineCollisionLeftFork && fineCollisionRightFork)
+                    //{
+                    //    //Debug.Log("Pick up pallet");
+                    //    selectedPallet = palletXForm;
+                    //    return true;
+                    //} else if (fineCollisionLeftFork || fineCollisionRightFork)
+                    //{
+                    //    return true;
+                    //}
                 }
             }
         }
-        return false;
+        return null;
     }
 
     /*public void pickUpPallet()
@@ -420,16 +448,16 @@ public class DriveForklift : MonoBehaviour
         Matrix4x4 rightMatrix = rightFork.getNodeMatrix();
         Vector3 rightPosition = rightMatrix.GetColumn(3);
         //float newX = (leftPosition.x + rightPosition.x) / 2;
-        float newX = leftPosition.x + 0.5f;
-        float newY = leftPosition.y - 0.1f;
-        float newZ = (leftPosition.z + rightPosition.z) / 2;
+        //float newX = leftPosition.x + 0.f;
+        //float newY = leftPosition.y - 0.1f;
+        //float newZ = (leftPosition.z + rightPosition.z) / 2;
         Vector3 forkup = forksSceneMatrix.GetColumn(1).normalized;
         Vector3 forkforward = forksSceneMatrix.GetColumn(2).normalized;
         Vector3 forkright = forksSceneMatrix.GetColumn(0).normalized;
         leftPosition = (leftPosition + rightPosition) / 2;
         //leftPosition -= forkforward * 0.3f;
-        leftPosition += forkright;
-        leftPosition -= forkup * 0.1f;
+        leftPosition += forkright*0.1f;
+        leftPosition -= forkup * 0.05f;
         selectedPallet.localPosition = leftPosition;
         Vector4 newRotation = leftMatrix.GetColumn(2);
 
