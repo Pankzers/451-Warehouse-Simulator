@@ -959,7 +959,7 @@ MonoBehaviour:
   statusText: {fileID: 498725997}
   endMessageText: {fileID: 1461200360}
   endMessage: {fileID: 1589336029}
-  timeRemaining: 180
+  timeRemaining: 15
   timerIsRunning: 0
   timerText: {fileID: 1404818872}
   resetButton: {fileID: 1803585676}

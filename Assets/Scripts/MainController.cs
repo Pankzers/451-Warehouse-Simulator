@@ -129,7 +129,6 @@ public class MainController : MonoBehaviour
         {
             arrow.gameObject.SetActive(false);
             endGame();
-            statusText.text = "Drop-offs completed: 5 / 5";
         }
         displayDropOffLocation();
     }
@@ -234,8 +233,9 @@ public class MainController : MonoBehaviour
         if (timeRemaining > 0)
         {
             endMessageText.text = "Congratulations! You delivered all the pallets on time! Click Reset to play again or Quit to exit.";
-
-        } else
+            statusText.text = "Drop-offs completed: 5 / 5";
+        }
+        else
         {
             endMessageText.text = "Game Over! You failed to deliver all the pallets on time! Click Reset to try again or Quit to exit.";
         }
