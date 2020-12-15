@@ -7,6 +7,7 @@ public class TheWorld : MonoBehaviour
 {
     public Transform Aisles = null;
     public Transform Pallets = null;
+    public Transform Walls = null;
     public SceneNode TheRoot;
     public SeparatingAxisTest SAT = null;
 
@@ -14,6 +15,7 @@ public class TheWorld : MonoBehaviour
     {
         Debug.Assert(Aisles != null);
         Debug.Assert(Pallets != null);
+        Debug.Assert(Walls != null);
         Debug.Assert(SAT != null);
     }
 
@@ -45,6 +47,21 @@ public class TheWorld : MonoBehaviour
                 }
             }
 
+        }
+        return toTest;
+    }
+
+    public ArrayList testWallCollision(Transform forklift)
+    {
+        ArrayList toTest = new ArrayList();
+        BoxCollider liftCollider = forklift.GetComponent<BoxCollider>();
+        foreach (Transform wall in Walls)
+        {
+            BoxCollider wallCollider = wall.GetComponent<BoxCollider>();
+            if (intersectColliders(liftCollider, wallCollider))
+            {
+                toTest.Add(wall);
+            }
         }
         return toTest;
     }

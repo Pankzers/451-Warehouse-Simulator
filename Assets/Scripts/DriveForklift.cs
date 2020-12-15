@@ -29,7 +29,12 @@ public class DriveForklift : MonoBehaviour
 
     public float dragMod = 50f;
 
-    public MainController controller; 
+    public MainController controller;
+
+    public float maxX = 50f;
+    public float minX = -50f;
+    public float maxZ = 50f;
+    public float minZ = -50f;
 
     void Start()
     {
@@ -41,10 +46,6 @@ public class DriveForklift : MonoBehaviour
 
     void Update()
     {
-        if (selectedPallet != null)
-        {
-            palletColliding();
-        }
         bool movedForward = false;
         bool movedBackward = false;
         bool rotatedLeft = false;
@@ -174,6 +175,7 @@ public class DriveForklift : MonoBehaviour
         {
             Transform palletCollision = checkPalletCollision();
             bool shelfCollision = checkShelfCollision();
+            bool wallCollision = checkWallCollision();
             bool palletCollidingWithShelf = false;
             if (selectedPallet != null)
             {
@@ -183,7 +185,7 @@ public class DriveForklift : MonoBehaviour
             {
                 pickUpPallet();
             }
-            if((palletCollision != null && palletCollision != selectedPallet) || shelfCollision || palletCollidingWithShelf)
+            if((palletCollision != null && palletCollision != selectedPallet) || shelfCollision || palletCollidingWithShelf || wallCollision)
             {
                 if (movedForward)
                 {
@@ -257,12 +259,59 @@ public class DriveForklift : MonoBehaviour
                     {
                         if (world.SAT.CheckCollision(part, part.GetComponent<MeshFilter>().mesh, shelfPart, shelfPart.GetComponent<MeshFilter>().mesh))
                         {
-                            Debug.Log("Pallet colliding with shelf");
                             return true;
                         }
                     }
                 }
             }
+        }
+        return false;
+    }
+
+    /*public void checkWallCollision()
+    {
+        ArrayList toTest = world.testWallCollision(transform);
+        Debug.Log(toTest.Count);
+        foreach (Transform wall in toTest)
+        {
+            if (world.SAT.CheckCollision(frame.transform, frame.GetComponent<MeshFilter>().mesh, wall, wall.GetComponent<MeshFilter>().mesh))
+            {
+                Debug.Log("Frame hitting wall");
+            }
+            if (world.SAT.CheckCollision(leftFork.transform, leftFork.GetComponent<MeshFilter>().mesh, wall, wall.GetComponent<MeshFilter>().mesh))
+            {
+                Debug.Log("LeftFork hitting wall");
+            }
+            if (world.SAT.CheckCollision(rightFork.transform, rightFork.GetComponent<MeshFilter>().mesh, wall, wall.GetComponent<MeshFilter>().mesh))
+            {
+                Debug.Log("RightFork hitting wall");
+            }
+            if (world.SAT.CheckCollision(leftFront.transform, leftFront.GetComponent<MeshFilter>().mesh, wall, wall.GetComponent<MeshFilter>().mesh))
+            {
+                Debug.Log("LeftFront hitting wall");
+            }
+            if (world.SAT.CheckCollision(rightFront.transform, rightFront.GetComponent<MeshFilter>().mesh, wall, wall.GetComponent<MeshFilter>().mesh))
+            {
+                Debug.Log("RightFront hitting wall");
+            }
+        }
+    }*/
+
+    public bool checkWallCollision()
+    {
+        if (transform.GetComponent<Collider>().bounds.max.x > maxX)
+        {
+            return true;
+        }
+        if (transform.GetComponent<Collider>().bounds.min.x < minX) {
+            return true;
+        }
+        if (transform.GetComponent<Collider>().bounds.max.z > maxZ)
+        {
+            return true;
+        }
+        if (transform.GetComponent<Collider>().bounds.min.z < minZ) {
+            return true;
         }
         return false;
     }

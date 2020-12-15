@@ -71,10 +71,6 @@ public class MainController : MonoBehaviour
 
     void Update()
     {
-        if (pallet == null)
-        {
-            Debug.Log("Hello");
-        }
         if (timerIsRunning)
         {
             if (timeRemaining > 0)
