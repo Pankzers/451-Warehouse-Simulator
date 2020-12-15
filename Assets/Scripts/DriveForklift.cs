@@ -60,6 +60,7 @@ public class DriveForklift : MonoBehaviour
         } else
         {
             velocityToggle = false;
+            velocity = 0;
         }
         if(velocityToggle)
         {

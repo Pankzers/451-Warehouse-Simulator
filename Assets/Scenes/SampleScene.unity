@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -964,7 +964,7 @@ MonoBehaviour:
   timerText: {fileID: 1404818872}
   resetButton: {fileID: 1803585676}
   exitButton: {fileID: 1660713822}
-  ignoreTimer: 1
+  ignoreTimer: 0
 --- !u!1 &70251788 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7432852557102529754, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
