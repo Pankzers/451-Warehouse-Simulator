@@ -144,11 +144,11 @@ public class DriveForklift : MonoBehaviour
             screenMouseDir.x = Input.GetAxis("Mouse X");
             screenMouseDir.y = Input.GetAxis("Mouse Y");
             float dist = (screenMouseDir.y + (screenMouseDir.x * ((yAngle - 90)/90)))*dragMod*15;
-            if(dist > 0 && forksSceneNode.transform.localPosition.y > 2.75)
+            if(dist > 0 && forksSceneNode.transform.localPosition.y > 5.6)
             {
                 dist = 0;
             }
-            if( dist < 0 && forksSceneNode.transform.localPosition.y < 0)
+            if( dist < 0 && forksSceneNode.transform.localPosition.y < -0.4f)
             {
                 dist = 0;
             }
