@@ -71,6 +71,10 @@ public class MainController : MonoBehaviour
 
     void Update()
     {
+        if (pallet == null)
+        {
+            Debug.Log("Hello");
+        }
         if (timerIsRunning)
         {
             if (timeRemaining > 0)
@@ -103,7 +107,6 @@ public class MainController : MonoBehaviour
                     currDropOffShelf = secondDropOffShelf;
                     nextPickUpCoordinates = new Vector3(thirdPickUpShelf.transform.position.x, thirdPickUpShelf.transform.position.y + 0.2f, thirdPickUpShelf.transform.position.z);
                     currPickUpShelf = thirdPickUpShelf;
-                    Debug.Log("Hello");
                     if (onThird)
                     {
                         currDropOffShelf = thirdDropOffShelf;
@@ -141,7 +144,6 @@ public class MainController : MonoBehaviour
         currDropOffShelf.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
         float totalDistance = Vector3.Distance(pallet.position, currDropOffShelf.transform.position);
         float heightDifference = pallet.position.y - currDropOffShelf.transform.position.y;
-        Debug.Log(totalDistance);
         if (totalDistance < 1.5f && heightDifference > 0.2f && heightDifference < 0.3f)
         {
             pallet.position = new Vector3(currDropOffShelf.transform.position.x, currDropOffShelf.transform.position.y + 0.2f, currDropOffShelf.transform.position.z);
@@ -220,14 +222,12 @@ public class MainController : MonoBehaviour
             {
                 currPickUpShelf.GetComponent<Renderer>().material = null;
                 currPickUpShelf.GetComponent<Renderer>().material.color = pickUpShelfColor;
-                Debug.Log("Here");
             }
         }
         else
         {
             if (prevPickUpShelf != null)
             {
-                Debug.Log("Not Here");
                 prevPickUpShelf.GetComponent<Renderer>().material = shelfMaterial;
             }
         }

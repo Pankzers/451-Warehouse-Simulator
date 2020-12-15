@@ -44,10 +44,12 @@ public class DriveForklift : MonoBehaviour
 
     void Update()
     {
+
         if (Mathf.Abs(velocity) < 0.01f)
         {
             velocity = 0;
         }
+        
         bool movedForward = false;
         bool movedBackward = false;
         bool rotatedLeft = false;
@@ -198,11 +200,13 @@ public class DriveForklift : MonoBehaviour
             {
                 Transform palletCollision = checkPalletCollision();
                 bool shelfCollision = checkShelfCollision();
+                bool palletCollidingWithShelf = false;
                 if (selectedPallet != null)
                 {
                     pickUpPallet();
+                    palletCollidingWithShelf = palletColliding();
                 }
-                if ((palletCollision != null && palletCollision != selectedPallet) || shelfCollision)
+                if ((palletCollision != null && palletCollision != selectedPallet) || shelfCollision || palletCollidingWithShelf)
                 {
                     if (movedForward || movedBackward || rolledForward)
                     {
@@ -266,6 +270,31 @@ public class DriveForklift : MonoBehaviour
         }
         return false;
     }
+
+    public bool palletColliding()
+    {
+        ArrayList toTest = world.testShelfCollision(selectedPallet);
+        foreach (Transform shelf in toTest)
+        {
+            foreach (Transform shelfPart in shelf)
+            {
+                foreach (Transform partgroup in selectedPallet)
+                {
+                    foreach (Transform part in partgroup)
+                    {
+                        if (world.SAT.CheckCollision(part, part.GetComponent<MeshFilter>().mesh, shelfPart, shelfPart.GetComponent<MeshFilter>().mesh))
+                        {
+                            Debug.Log("Pallet colliding with shelf");
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
     bool CheckRayPartIntersection(Ray ray, GameObject obj)
     {
         Vector3 rayOrigin = ray.origin;
