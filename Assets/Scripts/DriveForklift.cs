@@ -53,7 +53,7 @@ public class DriveForklift : MonoBehaviour
         {
             velocity = 0;
         }
-        
+
         bool movedForward = false;
         bool movedBackward = false;
         bool rotatedLeft = false;
@@ -61,8 +61,8 @@ public class DriveForklift : MonoBehaviour
         bool frontMoved = false;
         bool forksMoved = false;
         bool rolledForward = false;
-        
-        
+
+
         Quaternion lastFrontRotation = Quaternion.identity;
         Vector3 lastForksPosition = Vector3.zero;
         if (controller.timeRemaining > 0 || controller.ignoreTimer)
@@ -87,8 +87,8 @@ public class DriveForklift : MonoBehaviour
             {
                 rotateLeft = Quaternion.AngleAxis(-(1 - Mathf.Log(Mathf.Abs(velocity), 12)) * velocity * 30 * Time.deltaTime, Vector3.up);
                 rotateRight = Quaternion.AngleAxis((1 - Mathf.Log(Mathf.Abs(velocity), 12)) * velocity * 30 * Time.deltaTime, Vector3.up);
-            } 
-            
+            }
+
             if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
             {
                 rotatedLeft = true;
@@ -148,27 +148,6 @@ public class DriveForklift : MonoBehaviour
                 Vector3 frontForward = nodeMatrix.GetColumn(0).normalized;
                 Vector3 frontRight = -Vector3.forward;
 
-        //UPDATE THE FORKLIFT SCENE HIERARCHY!!
-        Matrix4x4 i = Matrix4x4.identity;
-        frameSceneNode.CompositeXform(ref i);
-        //SERIOUSLY IF THIS IS NOT UPDATED COLLISION DOES NOT WORK
-        if (movedForward || movedBackward || rotatedLeft || rotatedRight || frontMoved || forksMoved)
-        {
-            Transform palletCollision = checkPalletCollision();
-            bool shelfCollision = checkShelfCollision();
-            bool wallCollision = checkWallCollision();
-            bool palletCollidingWithShelf = false;
-            if (selectedPallet != null)
-            {
-                palletCollidingWithShelf = palletColliding();
-            }
-            if (selectedPallet != null)
-            {
-                pickUpPallet();
-            }
-            if((palletCollision != null && palletCollision != selectedPallet) || shelfCollision || palletCollidingWithShelf || wallCollision)
-            {
-                if (movedForward)
                 float xDist = Input.GetAxis("Mouse X");
                 float yAngle = Mathf.Acos(Vector3.Dot(Vector3.up, frontForward)) * Mathf.Rad2Deg;
                 if (xDist < 0 && yAngle < 70)
@@ -225,13 +204,14 @@ public class DriveForklift : MonoBehaviour
             {
                 Transform palletCollision = checkPalletCollision();
                 bool shelfCollision = checkShelfCollision();
+                bool wallCollision = checkWallCollision();
                 bool palletCollidingWithShelf = false;
                 if (selectedPallet != null)
                 {
                     pickUpPallet();
                     palletCollidingWithShelf = palletColliding();
                 }
-                if ((palletCollision != null && palletCollision != selectedPallet) || shelfCollision || palletCollidingWithShelf)
+                if ((palletCollision != null && palletCollision != selectedPallet) || shelfCollision || palletCollidingWithShelf || wallCollision)
                 {
                     if (movedForward || movedBackward || rolledForward)
                     {
@@ -257,14 +237,14 @@ public class DriveForklift : MonoBehaviour
                 }
 
             }
-            if(velocity != 0 && !movedForward && !movedBackward )
+            if (velocity != 0 && !movedForward && !movedBackward)
             {
                 //Debug.Log("Decelerating");
-                velocity -= ((friction * velocity) + (Mathf.Cos(velocity/8)* (friction * velocity))) * Time.deltaTime;
+                velocity -= ((friction * velocity) + (Mathf.Cos(velocity / 8) * (friction * velocity))) * Time.deltaTime;
             }
-                
+
         }
-        
+
         forkliftCams.UpdateCameras();
     }
 
