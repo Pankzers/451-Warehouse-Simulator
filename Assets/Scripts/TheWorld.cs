@@ -51,13 +51,14 @@ public class TheWorld : MonoBehaviour
 
     public ArrayList testPalletCollision(Transform forkliftXForm)
     {
-        float threshold = 2f;
+        float threshold = 3f;
         ArrayList toTest = new ArrayList();
         DriveForklift forkDrive = forkliftXForm.GetComponent<DriveForklift>();
+        Vector3 forksPos = (forkDrive.leftFork.getNodeMatrix().GetColumn(3) + forkDrive.rightFork.getNodeMatrix().GetColumn(3)) / 2;
         foreach (Transform palletXForm in Pallets)
         {
             
-            if (Vector3.Distance(forkDrive.forksSceneNode.getCombinedMatrix().GetColumn(3), palletXForm.position) < threshold)
+            if (Vector3.Distance(forksPos, palletXForm.position) < threshold)
             {
                 toTest.Add(palletXForm);
             }
