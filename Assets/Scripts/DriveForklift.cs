@@ -196,7 +196,7 @@ public class DriveForklift : MonoBehaviour
             Matrix4x4 i = Matrix4x4.identity;
             frameSceneNode.CompositeXform(ref i);
             //SERIOUSLY IF THIS IS NOT UPDATED COLLISION DOES NOT WORK
-            if (velocity != 0)
+            if (velocity != 0 || frontMoved || forksMoved)
             {
                 Transform palletCollision = checkPalletCollision();
                 bool shelfCollision = checkShelfCollision();
