@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MainController : MonoBehaviour
 {
@@ -49,6 +50,9 @@ public class MainController : MonoBehaviour
     public bool timerIsRunning = false;
     public Text timerText;
 
+    public Button resetButton;
+    public Button exitButton;
+
     void Start()
     {
         Debug.Assert(arrow != null);
@@ -56,6 +60,8 @@ public class MainController : MonoBehaviour
         //rt = GameObject.Find("Arrow").GetComponent<RectTransform>();
         forkDrive = forklift.GetComponent<DriveForklift>();
         timerIsRunning = true;
+        resetButton.onClick.AddListener(resetGame);
+        exitButton.onClick.AddListener(exitGame);
     }
 
     void Update()
@@ -232,6 +238,16 @@ public class MainController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void resetGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void exitGame()
+    {
+        Application.Quit();
     }
 
 }
