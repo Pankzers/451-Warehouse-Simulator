@@ -23,11 +23,11 @@ public class DriveForklift : MonoBehaviour
     public bool draggingFront;
     public bool draggingForks;
 
+    private int collisionCount = 0;
+
     public Transform selectedPallet;
 
     public float dragMod = 50f;
-    private static Quaternion rotateLeft = Quaternion.AngleAxis(-0.15f, Vector3.up);
-    private static Quaternion rotateRight = Quaternion.AngleAxis(0.15f, Vector3.up);
 
     void Start()
     {
@@ -45,36 +45,29 @@ public class DriveForklift : MonoBehaviour
         bool rotatedRight = false;
         bool frontMoved = false;
         bool forksMoved = false;
-
-        //Vector3 lastPosition = Vector3.zero;
-        //Quaternion lastRotation = Quaternion.identity;
+        float movementMod = 0.015f;
+        Quaternion rotateLeft = Quaternion.AngleAxis(-0.15f, Vector3.up);
+        Quaternion rotateRight = Quaternion.AngleAxis(0.15f, Vector3.up);
         Quaternion lastFrontRotation = Quaternion.identity;
         Vector3 lastForksPosition = Vector3.zero;
-        if (frameSceneNode.transform.right.x < 0)
-        {
-            direction = -1;
-        } else
-        {
-            direction = 1;
-        }
         if(Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
         {
-            frameSceneNode.transform.position += frameSceneNode.transform.right * 0.015f;
+            frameSceneNode.transform.position += frameSceneNode.transform.right * movementMod;
             movedForward = true;
         } else if(Input.GetKey(KeyCode.S))
         {
-            frameSceneNode.transform.position -= frameSceneNode.transform.right * 0.015f;
+            frameSceneNode.transform.position -= frameSceneNode.transform.right * movementMod;
             movedBackward = true;
         }
         if(Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
         {
             rotatedLeft = true;
-            frameSceneNode.transform.rotation = rotateLeft * frameSceneNode.transform.rotation;
+            frameSceneNode.transform.localRotation = rotateLeft * frameSceneNode.transform.localRotation;
         } else if (Input.GetKey(KeyCode.D))
         {
-            Debug.Log("RotatingRight");
+            //Debug.Log("RotatingRight");
             rotatedRight = true;
-            frameSceneNode.transform.rotation = rotateRight * frameSceneNode.transform.rotation;
+            frameSceneNode.transform.localRotation = rotateRight * frameSceneNode.transform.localRotation;
         }
         if(Input.GetMouseButtonDown(0) && !Input.GetKey(KeyCode.LeftAlt))
         {
@@ -142,38 +135,48 @@ public class DriveForklift : MonoBehaviour
             draggingFront = false;
             draggingForks = false;
         }
+
+        //UPDATE THE FORKLIFT SCENE HIERARCHY!!
+        Matrix4x4 i = Matrix4x4.identity;
+        frameSceneNode.CompositeXform(ref i);
+        //SERIOUSLY IF THIS IS NOT UPDATED COLLISION DOES NOT WORK
+
         bool canPickUp = checkPalletCollision();
         if (canPickUp)
         {
             pickUpPallet();
         }
-        if(checkShelfCollision())
+        if (movedForward || movedBackward || rotatedLeft || rotatedRight || frontMoved || forksMoved)
         {
-            if(movedForward)
+            if (checkShelfCollision())
             {
-                frameSceneNode.transform.position -= frameSceneNode.transform.right * 0.045f;
-            }
-            if(movedBackward)
-            {
-                frameSceneNode.transform.position += frameSceneNode.transform.right * 0.045f;
-            }
-            if(rotatedLeft)
-            {
-                frameSceneNode.transform.rotation = rotateRight * rotateRight * rotateRight * frameSceneNode.transform.rotation;
-            }
-            if(rotatedRight)
-            {
-                frameSceneNode.transform.rotation = rotateLeft * rotateLeft * rotateLeft * frameSceneNode.transform.rotation;
-            }
-            if(frontMoved)
-            {
-                frontEndSceneNode.transform.localRotation = lastFrontRotation;
-            }
-            if(forksMoved)
-            {
-                forksSceneNode.transform.localPosition = lastForksPosition;
+                if (movedForward)
+                {
+                    frameSceneNode.transform.position -= (frameSceneNode.transform.right * movementMod);
+                }
+                if (movedBackward)
+                {
+                    frameSceneNode.transform.position += (frameSceneNode.transform.right * movementMod);
+                }
+                if (rotatedLeft)
+                {
+                    frameSceneNode.transform.localRotation = rotateRight * frameSceneNode.transform.localRotation;
+                }
+                if (rotatedRight)
+                {
+                    frameSceneNode.transform.localRotation = rotateLeft * frameSceneNode.transform.localRotation;
+                }
+                if (frontMoved)
+                {
+                    frontEndSceneNode.transform.localRotation = lastFrontRotation;
+                }
+                if (forksMoved)
+                {
+                    forksSceneNode.transform.localPosition = lastForksPosition;
+                }
             }
         }
+        
         forkliftCams.UpdateCameras();
     }
 

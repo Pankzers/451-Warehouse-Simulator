@@ -17,11 +17,11 @@ public class TheWorld : MonoBehaviour
         Debug.Assert(SAT != null);
     }
 
-    private void Update()
+    /*private void Update()
     {
         Matrix4x4 i = Matrix4x4.identity;
         TheRoot.CompositeXform(ref i);
-    }
+    }*/
 
     public ArrayList testShelfCollision(Transform liftTransform)
     {
