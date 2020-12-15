@@ -243,18 +243,18 @@ public class DriveForklift : MonoBehaviour
         xAxis = trsMatrix.GetColumn(0).normalized;
         yAxis = trsMatrix.GetColumn(1).normalized;
         zAxis = trsMatrix.GetColumn(2).normalized;
-        Debug.DrawRay(nodePos, xAxis, Color.red,5);
-        Debug.DrawRay(nodePos, yAxis, Color.green,5);
-        Debug.DrawRay(nodePos, zAxis, Color.blue,5);
+        //Debug.DrawRay(nodePos, xAxis, Color.red,5);
+        //Debug.DrawRay(nodePos, yAxis, Color.green,5);
+        //Debug.DrawRay(nodePos, zAxis, Color.blue,5);
         Bounds bound = obj.GetComponent<BoxCollider>().bounds;
-        Debug.DrawLine(nodePos, nodePos + xAxis * bound.max.x + yAxis * bound.max.y + zAxis * bound.max.z, Color.white, 10);
-        Debug.DrawLine(nodePos, nodePos + xAxis * bound.max.x + yAxis * bound.max.y + zAxis * bound.min.z, Color.white, 10);
-        Debug.DrawLine(nodePos, nodePos + xAxis * bound.max.x + yAxis * bound.min.y + zAxis * bound.max.z, Color.white, 10);
-        Debug.DrawLine(nodePos, nodePos + xAxis * bound.max.x + yAxis * bound.min.y + zAxis * bound.min.z, Color.white, 10);
-        Debug.DrawLine(nodePos, nodePos + xAxis * bound.min.x + yAxis * bound.max.y + zAxis * bound.max.z, Color.white, 10);
-        Debug.DrawLine(nodePos, nodePos + xAxis * bound.min.x + yAxis * bound.max.y + zAxis * bound.min.z, Color.white, 10);
-        Debug.DrawLine(nodePos, nodePos + xAxis * bound.min.x + yAxis * bound.min.y + zAxis * bound.max.z, Color.white, 10);
-        Debug.DrawLine(nodePos, nodePos + xAxis * bound.min.x + yAxis * bound.min.y + zAxis * bound.min.z, Color.white, 10);
+        //Debug.DrawLine(nodePos, nodePos + xAxis * bound.max.x + yAxis * bound.max.y + zAxis * bound.max.z, Color.white, 10);
+        //Debug.DrawLine(nodePos, nodePos + xAxis * bound.max.x + yAxis * bound.max.y + zAxis * bound.min.z, Color.white, 10);
+        //Debug.DrawLine(nodePos, nodePos + xAxis * bound.max.x + yAxis * bound.min.y + zAxis * bound.max.z, Color.white, 10);
+        //Debug.DrawLine(nodePos, nodePos + xAxis * bound.max.x + yAxis * bound.min.y + zAxis * bound.min.z, Color.white, 10);
+        //Debug.DrawLine(nodePos, nodePos + xAxis * bound.min.x + yAxis * bound.max.y + zAxis * bound.max.z, Color.white, 10);
+        //Debug.DrawLine(nodePos, nodePos + xAxis * bound.min.x + yAxis * bound.max.y + zAxis * bound.min.z, Color.white, 10);
+        //Debug.DrawLine(nodePos, nodePos + xAxis * bound.min.x + yAxis * bound.min.y + zAxis * bound.max.z, Color.white, 10);
+        //Debug.DrawLine(nodePos, nodePos + xAxis * bound.min.x + yAxis * bound.min.y + zAxis * bound.min.z, Color.white, 10);
         //Vector3 minBound = bound.min;
         //Vector3 maxBound = bound.max;
         Vector3 rayDelta = nodePos - rayOrigin;
@@ -345,8 +345,10 @@ public class DriveForklift : MonoBehaviour
     public bool checkPalletCollision()
     {
         ArrayList toTest = world.testPalletCollision(transform);
+        Debug.Log(toTest.Count);
         foreach (Transform palletXForm in toTest)
         {
+            Debug.Log(palletXForm.name);
             foreach (Transform partGroup in palletXForm)
             {
                 foreach (Transform part in partGroup)

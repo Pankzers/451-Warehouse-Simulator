@@ -4571,6 +4571,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b049ef4643ecbd44a18ddbce172e6b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forks: {fileID: 646125853}
   mMainCamera: {fileID: 963194227}
   mSecondaryCamera: {fileID: 1609415410}
   defaultMainLookPoint: {x: 0, y: 0, z: 0}
@@ -4578,7 +4579,7 @@ MonoBehaviour:
   MainCamPos: {x: -4, y: 4.5, z: 0}
   SecondaryCamPos: {x: 0, y: 0, z: -4}
   mainCamNode: {fileID: 400660507}
-  secondaryCamNode: {fileID: 400660507}
+  secondaryCamNode: {fileID: 646125853}
 --- !u!65 &400660510
 BoxCollider:
   m_ObjectHideFlags: 0
