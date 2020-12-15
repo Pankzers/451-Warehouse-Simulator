@@ -192,7 +192,14 @@ public class MainController : MonoBehaviour
             objectivePos = currDropOffShelf.transform.position;
         } else
         {
-            objectivePos = palletParent.GetChild(0).position;
+            if(palletParent.childCount != 0)
+            {
+                objectivePos = palletParent.GetChild(0).position;
+            } else
+            {
+                arrow.gameObject.SetActive(false);
+            }
+            
         }
         
         objectivePos.y = 0;

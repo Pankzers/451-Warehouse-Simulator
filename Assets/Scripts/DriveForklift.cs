@@ -30,11 +30,13 @@ public class DriveForklift : MonoBehaviour
     public float dragMod = 50f;
 
     public MainController controller;
-
     public float maxX = 50f;
     public float minX = -50f;
     public float maxZ = 50f;
     public float minZ = -50f;
+    public float acceleration = 10f;
+    public float friction = 0.02f;
+    private float velocity = 0;
 
     void Start()
     {
@@ -46,29 +48,47 @@ public class DriveForklift : MonoBehaviour
 
     void Update()
     {
+
+        if (Mathf.Abs(velocity) < 0.01f)
+        {
+            velocity = 0;
+        }
+        
         bool movedForward = false;
         bool movedBackward = false;
         bool rotatedLeft = false;
         bool rotatedRight = false;
         bool frontMoved = false;
         bool forksMoved = false;
-        float movementMod = 4 * Time.deltaTime;
-        Quaternion rotateLeft = Quaternion.AngleAxis(-40 * Time.deltaTime, Vector3.up);
-        Quaternion rotateRight = Quaternion.AngleAxis(40 * Time.deltaTime, Vector3.up);
+        bool rolledForward = false;
+        
+        
         Quaternion lastFrontRotation = Quaternion.identity;
         Vector3 lastForksPosition = Vector3.zero;
         if (controller.timeRemaining > 0 || controller.ignoreTimer)
         {
             if (Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
             {
-                frameSceneNode.transform.position += frameSceneNode.transform.right * movementMod;
+                if (velocity < 8)
+                    velocity += Mathf.Max(acceleration * Time.deltaTime);
+                //frameSceneNode.transform.position += frameSceneNode.transform.right * movementMod;
                 movedForward = true;
             }
             else if (Input.GetKey(KeyCode.S))
             {
-                frameSceneNode.transform.position -= frameSceneNode.transform.right * movementMod;
+                if (velocity > -8)
+                    velocity -= (acceleration * Time.deltaTime);
+                //frameSceneNode.transform.position -= frameSceneNode.transform.right * movementMod;
                 movedBackward = true;
             }
+            Quaternion rotateLeft = Quaternion.identity;
+            Quaternion rotateRight = Quaternion.identity;
+            if (velocity != 0)
+            {
+                rotateLeft = Quaternion.AngleAxis(-(1 - Mathf.Log(Mathf.Abs(velocity), 12)) * velocity * 30 * Time.deltaTime, Vector3.up);
+                rotateRight = Quaternion.AngleAxis((1 - Mathf.Log(Mathf.Abs(velocity), 12)) * velocity * 30 * Time.deltaTime, Vector3.up);
+            } 
+            
             if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
             {
                 rotatedLeft = true;
@@ -80,92 +100,53 @@ public class DriveForklift : MonoBehaviour
                 rotatedRight = true;
                 frameSceneNode.transform.localRotation = rotateRight * frameSceneNode.transform.localRotation;
             }
-        }
-        /*if(Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
-        {
-            frameSceneNode.transform.position += frameSceneNode.transform.right * movementMod;
-            movedForward = true;
-        } else if(Input.GetKey(KeyCode.S))
-        {
-            frameSceneNode.transform.position -= frameSceneNode.transform.right * movementMod;
-            movedBackward = true;
-        }
-        if(Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-        {
-            rotatedLeft = true;
-            frameSceneNode.transform.localRotation = rotateLeft * frameSceneNode.transform.localRotation;
-        } else if (Input.GetKey(KeyCode.D))
-        {
-            //Debug.Log("RotatingRight");
-            rotatedRight = true;
-            frameSceneNode.transform.localRotation = rotateRight * frameSceneNode.transform.localRotation;
-        }*/
-        if(Input.GetMouseButtonDown(0) && !Input.GetKey(KeyCode.LeftAlt))
-        {
-            Ray ray = forkliftCams.getSecondaryCamRay(); 
-            if (CheckRayPartIntersection(ray, leftFront))
-            {
-                draggingFront = true;
-            } else if(CheckRayPartIntersection(ray, rightFront))
-            {
-                draggingFront = true;
-            } else if (CheckRayPartIntersection(ray, leftFork.gameObject))
-            {
-                draggingForks = true;
-            } else if (CheckRayPartIntersection(ray, rightFork.gameObject))
-            {
-                draggingForks = true;
-            }
-        }
-        if(draggingFront)
-        {
-            frontMoved = true;
-            lastFrontRotation = frontEndSceneNode.transform.localRotation;
-            Matrix4x4 nodeMatrix = frontEndSceneNode.getCombinedMatrix();
-            Vector3 frontForward = nodeMatrix.GetColumn(0).normalized;
-            Vector3 frontRight = -Vector3.forward;
 
-            float xDist = Input.GetAxis("Mouse X");
-            float yAngle = Mathf.Acos(Vector3.Dot(Vector3.up, frontForward)) * Mathf.Rad2Deg;
-            if (xDist < 0 && yAngle < 70)
+            /*if(Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
             {
-                xDist = 0;
-            }
-            if (xDist > 0 && yAngle > 102)
+                frameSceneNode.transform.position += frameSceneNode.transform.right * movementMod;
+                movedForward = true;
+            } else if(Input.GetKey(KeyCode.S))
             {
-                xDist = 0;
+                frameSceneNode.transform.position -= frameSceneNode.transform.right * movementMod;
+                movedBackward = true;
             }
-            Quaternion rot = Quaternion.AngleAxis(xDist, -Vector3.forward);
-            frontEndSceneNode.transform.localRotation *= rot;
-        }
-        if(draggingForks)
-        {
-            forksMoved = true;
-            lastForksPosition = forksSceneNode.transform.localPosition;
-            Matrix4x4 forkMatrix = forksSceneNode.getCombinedMatrix();
-            Vector3 forwardDir = forkMatrix.GetColumn(0).normalized;
-            Vector2 screenMouseDir = Vector2.zero;
-            float yAngle = Mathf.Acos(Vector3.Dot(Vector3.up, forwardDir)) * Mathf.Rad2Deg;
-            screenMouseDir.x = Input.GetAxis("Mouse X");
-            screenMouseDir.y = Input.GetAxis("Mouse Y");
-            float dist = (screenMouseDir.y + (screenMouseDir.x * ((yAngle - 90)/90)))*dragMod*15;
-            if(dist > 0 && forksSceneNode.transform.localPosition.y > 5.6)
+            if(Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
             {
-                dist = 0;
-            }
-            if( dist < 0 && forksSceneNode.transform.localPosition.y < -0.4f)
+                rotatedLeft = true;
+                frameSceneNode.transform.localRotation = rotateLeft * frameSceneNode.transform.localRotation;
+            } else if (Input.GetKey(KeyCode.D))
             {
-                dist = 0;
+                //Debug.Log("RotatingRight");
+                rotatedRight = true;
+                frameSceneNode.transform.localRotation = rotateRight * frameSceneNode.transform.localRotation;
+            }*/
+            if (Input.GetMouseButtonDown(0) && !Input.GetKey(KeyCode.LeftAlt))
+            {
+                Ray ray = forkliftCams.getSecondaryCamRay();
+                if (CheckRayPartIntersection(ray, leftFront))
+                {
+                    draggingFront = true;
+                }
+                else if (CheckRayPartIntersection(ray, rightFront))
+                {
+                    draggingFront = true;
+                }
+                else if (CheckRayPartIntersection(ray, leftFork.gameObject))
+                {
+                    draggingForks = true;
+                }
+                else if (CheckRayPartIntersection(ray, rightFork.gameObject))
+                {
+                    draggingForks = true;
+                }
             }
-            forksSceneNode.transform.localPosition += Vector3.up * dist;
-            //selected.localPosition += dir * dist;
-            //AxisFrame.localPosition = selected.position;
-        }
-        if(Input.GetMouseButtonUp(0))
-        {
-            draggingFront = false;
-            draggingForks = false;
-        }
+            if (draggingFront)
+            {
+                frontMoved = true;
+                lastFrontRotation = frontEndSceneNode.transform.localRotation;
+                Matrix4x4 nodeMatrix = frontEndSceneNode.getCombinedMatrix();
+                Vector3 frontForward = nodeMatrix.GetColumn(0).normalized;
+                Vector3 frontRight = -Vector3.forward;
 
         //UPDATE THE FORKLIFT SCENE HIERARCHY!!
         Matrix4x4 i = Matrix4x4.identity;
@@ -188,31 +169,100 @@ public class DriveForklift : MonoBehaviour
             if((palletCollision != null && palletCollision != selectedPallet) || shelfCollision || palletCollidingWithShelf || wallCollision)
             {
                 if (movedForward)
+                float xDist = Input.GetAxis("Mouse X");
+                float yAngle = Mathf.Acos(Vector3.Dot(Vector3.up, frontForward)) * Mathf.Rad2Deg;
+                if (xDist < 0 && yAngle < 70)
                 {
-                    frameSceneNode.transform.position -= (frameSceneNode.transform.right * movementMod);
+                    xDist = 0;
                 }
-                if (movedBackward)
+                if (xDist > 0 && yAngle > 102)
                 {
-                    frameSceneNode.transform.position += (frameSceneNode.transform.right * movementMod);
+                    xDist = 0;
                 }
-                if (rotatedLeft)
-                {
-                    frameSceneNode.transform.localRotation = rotateRight * frameSceneNode.transform.localRotation;
-                }
-                if (rotatedRight)
-                {
-                    frameSceneNode.transform.localRotation = rotateLeft * frameSceneNode.transform.localRotation;
-                }
-                if (frontMoved)
-                {
-                    frontEndSceneNode.transform.localRotation = lastFrontRotation;
-                }
-                if (forksMoved)
-                {
-                    forksSceneNode.transform.localPosition = lastForksPosition;
-                }
+                Quaternion rot = Quaternion.AngleAxis(xDist, -Vector3.forward);
+                frontEndSceneNode.transform.localRotation *= rot;
             }
+            if (draggingForks)
+            {
+                forksMoved = true;
+                lastForksPosition = forksSceneNode.transform.localPosition;
+                Matrix4x4 forkMatrix = forksSceneNode.getCombinedMatrix();
+                Vector3 forwardDir = forkMatrix.GetColumn(0).normalized;
+                Vector2 screenMouseDir = Vector2.zero;
+                float yAngle = Mathf.Acos(Vector3.Dot(Vector3.up, forwardDir)) * Mathf.Rad2Deg;
+                screenMouseDir.x = Input.GetAxis("Mouse X");
+                screenMouseDir.y = Input.GetAxis("Mouse Y");
+                float dist = (screenMouseDir.y + (screenMouseDir.x * ((yAngle - 90) / 90))) * dragMod * 15;
+                if (dist > 0 && forksSceneNode.transform.localPosition.y > 5.6)
+                {
+                    dist = 0;
+                }
+                if (dist < 0 && forksSceneNode.transform.localPosition.y < -0.4f)
+                {
+                    dist = 0;
+                }
+                forksSceneNode.transform.localPosition += Vector3.up * dist;
+                //selected.localPosition += dir * dist;
+                //AxisFrame.localPosition = selected.position;
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                draggingFront = false;
+                draggingForks = false;
+            }
+            Debug.Log(velocity);
+            float movementMod = velocity * Time.deltaTime;
+            if (velocity != 0)
+            {
+                frameSceneNode.transform.position += frameSceneNode.transform.right * movementMod;
+                rolledForward = true;
+            }
+            //UPDATE THE FORKLIFT SCENE HIERARCHY!!
+            Matrix4x4 i = Matrix4x4.identity;
+            frameSceneNode.CompositeXform(ref i);
+            //SERIOUSLY IF THIS IS NOT UPDATED COLLISION DOES NOT WORK
+            if (velocity != 0 || frontMoved || forksMoved)
+            {
+                Transform palletCollision = checkPalletCollision();
+                bool shelfCollision = checkShelfCollision();
+                bool palletCollidingWithShelf = false;
+                if (selectedPallet != null)
+                {
+                    pickUpPallet();
+                    palletCollidingWithShelf = palletColliding();
+                }
+                if ((palletCollision != null && palletCollision != selectedPallet) || shelfCollision || palletCollidingWithShelf)
+                {
+                    if (movedForward || movedBackward || rolledForward)
+                    {
+                        frameSceneNode.transform.position -= (frameSceneNode.transform.right * movementMod);
+                    }
+                    if (rotatedLeft)
+                    {
+                        frameSceneNode.transform.localRotation = rotateRight * frameSceneNode.transform.localRotation;
+                    }
+                    if (rotatedRight)
+                    {
+                        frameSceneNode.transform.localRotation = rotateLeft * frameSceneNode.transform.localRotation;
+                    }
+                    if (frontMoved)
+                    {
+                        frontEndSceneNode.transform.localRotation = lastFrontRotation;
+                    }
+                    if (forksMoved)
+                    {
+                        forksSceneNode.transform.localPosition = lastForksPosition;
+                    }
+                    velocity = -velocity / 2;
+                }
 
+            }
+            if(velocity != 0 && !movedForward && !movedBackward )
+            {
+                //Debug.Log("Decelerating");
+                velocity -= ((friction * velocity) + (Mathf.Cos(velocity/8)* (friction * velocity))) * Time.deltaTime;
+            }
+                
         }
         
         forkliftCams.UpdateCameras();
