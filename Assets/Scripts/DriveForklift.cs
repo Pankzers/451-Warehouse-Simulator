@@ -52,7 +52,7 @@ public class DriveForklift : MonoBehaviour
         Quaternion rotateRight = Quaternion.AngleAxis(0.15f, Vector3.up);
         Quaternion lastFrontRotation = Quaternion.identity;
         Vector3 lastForksPosition = Vector3.zero;
-        if (controller.timeRemaining > 0)
+        if (controller.timeRemaining > 0 || controller.ignoreTimer)
         {
             if (Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
             {

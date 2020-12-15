@@ -55,6 +55,8 @@ public class MainController : MonoBehaviour
     public Button resetButton;
     public Button exitButton;
 
+    public bool ignoreTimer = false;
+
     void Start()
     {
         Debug.Assert(arrow != null);
@@ -83,7 +85,10 @@ public class MainController : MonoBehaviour
             }
         } else
         {
-            endGame();
+            if (!ignoreTimer)
+            {
+                endGame();
+            }
         }
         pallet = forkDrive.selectedPallet;
         if (pallet != null && !done)
@@ -221,7 +226,10 @@ public class MainController : MonoBehaviour
         {
             endMessageText.text = "Game Over! You failed to deliver all the pallets on time! Click Reset to try again or Quit to exit.";
         }
-        endMessage.SetActive(true);
+        if (!ignoreTimer)
+        {
+            endMessage.SetActive(true);
+        }
     }
 
     public void displayTime(float timeToDisplay)
