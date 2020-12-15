@@ -37,6 +37,7 @@ public class DriveForklift : MonoBehaviour
     public float acceleration = 10f;
     public float friction = 0.02f;
     private float velocity = 0;
+    public bool velocityToggle = true;
 
     void Start()
     {
@@ -48,11 +49,14 @@ public class DriveForklift : MonoBehaviour
 
     void Update()
     {
-        checkWallCollision();
-        if (Mathf.Abs(velocity) < 0.01f)
+        if(velocityToggle)
         {
-            velocity = 0;
+            if (Mathf.Abs(velocity) < 0.01f)
+            {
+                velocity = 0;
+            }
         }
+        
 
         bool movedForward = false;
         bool movedBackward = false;
@@ -67,27 +71,46 @@ public class DriveForklift : MonoBehaviour
         Vector3 lastForksPosition = Vector3.zero;
         if (controller.timeRemaining > 0 || controller.ignoreTimer)
         {
+            float movementMod = 4 * Time.deltaTime;
             if (Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
             {
-                if (velocity < 8)
-                    velocity += Mathf.Max(acceleration * Time.deltaTime);
-                //frameSceneNode.transform.position += frameSceneNode.transform.right * movementMod;
+                if(velocityToggle)
+                {
+                    if (velocity < 8)
+                        velocity += Mathf.Max(acceleration * Time.deltaTime);
+                } else
+                {
+                    frameSceneNode.transform.position += frameSceneNode.transform.right * movementMod;
+                }
                 movedForward = true;
             }
             else if (Input.GetKey(KeyCode.S))
             {
-                if (velocity > -8)
-                    velocity -= (acceleration * Time.deltaTime);
-                //frameSceneNode.transform.position -= frameSceneNode.transform.right * movementMod;
+                if(velocityToggle)
+                {
+                    if (velocity > -8)
+                        velocity -= (acceleration * Time.deltaTime);
+                } else
+                {
+                    frameSceneNode.transform.position -= frameSceneNode.transform.right * movementMod;
+                }
                 movedBackward = true;
             }
             Quaternion rotateLeft = Quaternion.identity;
             Quaternion rotateRight = Quaternion.identity;
-            if (velocity != 0)
+            if (velocityToggle)
             {
-                rotateLeft = Quaternion.AngleAxis(-(1 - Mathf.Log(Mathf.Abs(velocity), 12)) * velocity * 30 * Time.deltaTime, Vector3.up);
-                rotateRight = Quaternion.AngleAxis((1 - Mathf.Log(Mathf.Abs(velocity), 12)) * velocity * 30 * Time.deltaTime, Vector3.up);
+                if (velocity != 0)
+                {
+                    rotateLeft = Quaternion.AngleAxis(-(1 - Mathf.Log(Mathf.Abs(velocity), 12)) * velocity * 30 * Time.deltaTime, Vector3.up);
+                    rotateRight = Quaternion.AngleAxis((1 - Mathf.Log(Mathf.Abs(velocity), 12)) * velocity * 30 * Time.deltaTime, Vector3.up);
+                }
+            } else
+            {
+                rotateLeft = Quaternion.AngleAxis(-40 * Time.deltaTime, Vector3.up);
+                rotateRight = Quaternion.AngleAxis(40 * Time.deltaTime, Vector3.up);
             }
+            
 
             if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
             {
@@ -96,30 +119,10 @@ public class DriveForklift : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                //Debug.Log("RotatingRight");
                 rotatedRight = true;
                 frameSceneNode.transform.localRotation = rotateRight * frameSceneNode.transform.localRotation;
             }
 
-            /*if(Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
-            {
-                frameSceneNode.transform.position += frameSceneNode.transform.right * movementMod;
-                movedForward = true;
-            } else if(Input.GetKey(KeyCode.S))
-            {
-                frameSceneNode.transform.position -= frameSceneNode.transform.right * movementMod;
-                movedBackward = true;
-            }
-            if(Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-            {
-                rotatedLeft = true;
-                frameSceneNode.transform.localRotation = rotateLeft * frameSceneNode.transform.localRotation;
-            } else if (Input.GetKey(KeyCode.D))
-            {
-                //Debug.Log("RotatingRight");
-                rotatedRight = true;
-                frameSceneNode.transform.localRotation = rotateRight * frameSceneNode.transform.localRotation;
-            }*/
             if (Input.GetMouseButtonDown(0) && !Input.GetKey(KeyCode.LeftAlt))
             {
                 Ray ray = forkliftCams.getSecondaryCamRay();
@@ -181,32 +184,34 @@ public class DriveForklift : MonoBehaviour
                     dist = 0;
                 }
                 forksSceneNode.transform.localPosition += Vector3.up * dist;
-                //selected.localPosition += dir * dist;
-                //AxisFrame.localPosition = selected.position;
             }
             if (Input.GetMouseButtonUp(0))
             {
                 draggingFront = false;
                 draggingForks = false;
             }
-            Debug.Log(velocity);
-            float movementMod = velocity * Time.deltaTime;
-            if (velocity != 0)
+            
+            if (velocityToggle)
             {
-                frameSceneNode.transform.position += frameSceneNode.transform.right * movementMod;
-                rolledForward = true;
+                movementMod = velocity * Time.deltaTime;
+                if (velocity != 0)
+                {
+                    frameSceneNode.transform.position += frameSceneNode.transform.right * movementMod;
+                    rolledForward = true;
+                }
             }
+            
+            
             //UPDATE THE FORKLIFT SCENE HIERARCHY!!
             Matrix4x4 i = Matrix4x4.identity;
             frameSceneNode.CompositeXform(ref i);
             //SERIOUSLY IF THIS IS NOT UPDATED COLLISION DOES NOT WORK
-            if (velocity != 0 || frontMoved || forksMoved)
+            if (((velocity != 0 && velocityToggle) || ((movedForward||movedBackward||rotatedLeft||rotatedRight)&&!velocityToggle)) || frontMoved || forksMoved)
             {
                 
                 Transform palletCollision = checkPalletCollision();
                 bool shelfCollision = checkShelfCollision();
                 bool wallCollision = checkWallCollision();
-                Debug.Log("Wall Collision: " + wallCollision);
                 bool palletCollidingWithShelf = false;
                 if (selectedPallet != null)
                 {
@@ -215,13 +220,17 @@ public class DriveForklift : MonoBehaviour
                 }
                 if ((palletCollision != null && palletCollision != selectedPallet) || shelfCollision || palletCollidingWithShelf || wallCollision)
                 {
-                    if (movedForward || movedBackward || rolledForward)
+                    if (rolledForward)
                     {
-                        Debug.Log("Undoing Movement");
                         frameSceneNode.transform.position -= (frameSceneNode.transform.right * movementMod);
-                        Matrix4x4 j = Matrix4x4.identity;
-                        frameSceneNode.CompositeXform(ref j);
-                        Debug.Log("Wall Collision redux: " + checkWallCollision());
+                    }
+                    if (movedForward && !velocityToggle)
+                    {
+                        frameSceneNode.transform.position -= (frameSceneNode.transform.right * movementMod);
+                    }
+                    if (movedBackward && !velocityToggle)
+                    {
+                        frameSceneNode.transform.position += (frameSceneNode.transform.right * movementMod);
                     }
                     if (rotatedLeft)
                     {
@@ -239,15 +248,20 @@ public class DriveForklift : MonoBehaviour
                     {
                         forksSceneNode.transform.localPosition = lastForksPosition;
                     }
-                    velocity = -velocity / 2;
+                    if(velocityToggle)
+                        velocity = -velocity / 2;
                 }
 
             }
-            if (velocity != 0 && !movedForward && !movedBackward)
+            if(velocityToggle)
             {
-                //Debug.Log("Decelerating");
-                velocity -= ((friction * velocity) + (Mathf.Cos(velocity / 8) * (friction * velocity))) * Time.deltaTime;
+                if (velocity != 0 && !movedForward && !movedBackward)
+                {
+                    //Debug.Log("Decelerating");
+                    velocity -= ((friction * velocity) + (Mathf.Cos(velocity / 8) * (friction * velocity))) * Time.deltaTime;
+                }
             }
+            
 
         }
 

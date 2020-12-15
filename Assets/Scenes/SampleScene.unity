@@ -5446,6 +5446,7 @@ MonoBehaviour:
   minZ: -50
   acceleration: 10
   friction: 0.985
+  velocityToggle: 1
 --- !u!114 &400660509
 MonoBehaviour:
   m_ObjectHideFlags: 0
