@@ -45,6 +45,8 @@ public class MainController : MonoBehaviour
     public Vector3 nextPickUpCoordinates;
 
     public Text statusText;
+    public Text endMessageText;
+    public GameObject endMessage;
 
     public float timeRemaining = 420;
     public bool timerIsRunning = false;
@@ -62,6 +64,7 @@ public class MainController : MonoBehaviour
         timerIsRunning = true;
         resetButton.onClick.AddListener(resetGame);
         exitButton.onClick.AddListener(exitGame);
+        endMessage.SetActive(false);
     }
 
     void Update()
@@ -74,6 +77,7 @@ public class MainController : MonoBehaviour
                 displayTime(timeRemaining);
             } else
             {
+                done = true;
                 timeRemaining = 0;
                 timerIsRunning = false;
             }
@@ -139,6 +143,7 @@ public class MainController : MonoBehaviour
             forkDrive.selectedPallet = null;
             if (onFifth)
             {
+                timerIsRunning = false; 
                 done = true;
             }
             if (onFourth)
@@ -210,11 +215,13 @@ public class MainController : MonoBehaviour
     {
         if (timeRemaining > 0)
         {
-            Debug.Log("Congratulations!");
+            endMessageText.text = "Congratulations! You delivered all the pallets on time! Click Reset to play again or Quit to exit.";
+
         } else
         {
-            Debug.Log("Better luck next time!");
+            endMessageText.text = "Game Over! You failed to deliver all the pallets on time! Click Reset to try again or Quit to exit.";
         }
+        endMessage.SetActive(true);
     }
 
     public void displayTime(float timeToDisplay)
