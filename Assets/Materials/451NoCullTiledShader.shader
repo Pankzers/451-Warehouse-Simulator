@@ -1,6 +1,6 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "Unlit/451NoCullSceneNode"
+Shader "Unlit/451NoCullTiledShader"
 {
 	Properties
 	{
@@ -38,8 +38,6 @@ Shader "Unlit/451NoCullSceneNode"
 
 			sampler2D _MainTex;
 
-
-			float4x4 MyXformMat;
 			float4 LightPosition;
 			fixed4 LightColor;
 			float  LightNear;
@@ -53,18 +51,16 @@ Shader "Unlit/451NoCullSceneNode"
 			v2f vert(appdata v)
 			{
 				v2f o;
-				o.vertex = mul(MyXformMat, v.vertex);  // use our own transform matrix!
-					// MUST apply before camrea!
+				o.vertex = UnityObjectToClipPos(v.vertex);   // World to NDC
 
-				o.vertex = mul(UNITY_MATRIX_VP, o.vertex);   // camera transform only  
-				o.uv = v.uv; // no specific placement support
+				o.uv = v.uv * 20; // no specific placement support
 
-				o.vertexWC = mul(MyXformMat, v.vertex); // this is in WC space!
+				o.vertexWC = mul(UNITY_MATRIX_M, v.vertex); // this is in WC space!
 				// this is not pretty but we don't have access to inverse-transpose ...
 				float3 p = v.vertex + 10 * v.normal;
 				// Try removing the 10, when light source is close to the surface
 				// Run into accuracy problem.
-		p = mul(MyXformMat, p);  // now in WC space
+		p = mul(UNITY_MATRIX_M, p);  // now in WC space
 		o.normal = normalize(p - o.vertexWC); // NOTE: this is in the world space!!
 		// o.normal = UnityObjectToWorldNormal(v.normal);
 		return o;
@@ -122,7 +118,6 @@ Shader "Unlit/451NoCullSceneNode"
 				float diff = ComputeDiffuse(i);
 				float diff2 = ComputeDiffuse2(i);
 				return col * diff * LightColor + diff2 * Light2Color;
-
 			}
 
 			ENDCG

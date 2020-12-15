@@ -18,6 +18,7 @@ public class DriveForklift : MonoBehaviour
     public GameObject leftFront;
     public GameObject rightFront;
 
+    public Transform strobe = null;
     public TheWorld world = null;
 
     public bool draggingFront;
@@ -43,6 +44,7 @@ public class DriveForklift : MonoBehaviour
     {
         Debug.Assert(forkliftCams != null);
         Debug.Assert(world != null);
+        Debug.Assert(strobe != null);
         draggingFront = false;
         draggingForks = false;
     }
@@ -251,6 +253,7 @@ public class DriveForklift : MonoBehaviour
                     if(velocityToggle)
                         velocity = -velocity / 2;
                 }
+                strobe.position = transform.position + new Vector3(0,0.8f,0);
 
             }
             if(velocityToggle)

@@ -42,6 +42,11 @@ Shader "Unlit/451NoCullShader"
             fixed4 LightColor;
             float  LightNear;
             float  LightFar;
+
+			float4 Light2Position;
+			fixed4 Light2Color;
+			float Light2Near;
+			float Light2Far;
 			
 			v2f vert (appdata v)
 			{
@@ -52,7 +57,7 @@ Shader "Unlit/451NoCullShader"
 
                 o.vertexWC = mul(UNITY_MATRIX_M, v.vertex); // this is in WC space!
                 // this is not pretty but we don't have access to inverse-transpose ...
-                float3 p = v.vertex + 10 * v.normal;
+                float3 p = v.vertex +10 * v.normal;
                         // Try removing the 10, when light source is close to the surface
                         // Run into accuracy problem.
                 p = mul(UNITY_MATRIX_M, p);  // now in WC space
@@ -82,6 +87,26 @@ Shader "Unlit/451NoCullShader"
                 return ndotl * strength;
             }
 
+			float ComputeDiffuse2(v2f i) {
+				float3 l = Light2Position - i.vertexWC;
+				float d = length(l);
+				l = l / d;
+				float strength = 1;
+
+				float ndotl = clamp(dot(i.normal, l), 0, 1);
+				if (d > Light2Near) {
+					if (d < Light2Far) {
+						float range = Light2Far - Light2Near;
+						float n = d - Light2Near;
+						strength = smoothstep(0, 1, 1.0 - (n * n) / (range * range));
+					}
+					else {
+						strength = 0;
+					}
+				}
+				return ndotl * strength;
+			}
+
 			fixed4 frag (v2f i) : SV_Target
 			{
                 // return fixed4(i.normal, 1.0);
@@ -91,7 +116,8 @@ Shader "Unlit/451NoCullShader"
 				fixed4 col = tex2D(_MainTex, i.uv);
                 
                 float diff = ComputeDiffuse(i);
-                return col * diff * LightColor;
+				float diff2 = ComputeDiffuse2(i);
+				return col * diff * LightColor + diff2 * Light2Color;
 			}
 
 			ENDCG

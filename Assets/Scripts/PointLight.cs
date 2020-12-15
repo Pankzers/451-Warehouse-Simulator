@@ -10,7 +10,7 @@ public class PointLight : MonoBehaviour {
 
     //public GameObject n, f;
     public bool ShowLightRanges = false;
-
+    public bool Light2Toggle = false;
 
 	// Use this for initialization
 	void Start () {
@@ -36,11 +36,21 @@ public class PointLight : MonoBehaviour {
         LoadLightToShader();
     }
 
-    public void LoadLightToShader()
+    virtual public void LoadLightToShader()
     {
-        Shader.SetGlobalVector("LightPosition", transform.localPosition);
-        Shader.SetGlobalColor("LightColor", LightColor);
-        Shader.SetGlobalFloat("LightNear", Near);
-        Shader.SetGlobalFloat("LightFar", Far);
+        if(Light2Toggle)
+        {
+            Shader.SetGlobalVector("Light2Position", transform.localPosition);
+            Shader.SetGlobalColor("Light2Color", LightColor);
+            Shader.SetGlobalFloat("Light2Near", Near);
+            Shader.SetGlobalFloat("Light2Far", Far);
+        } else
+        {
+            Shader.SetGlobalVector("LightPosition", transform.localPosition);
+            Shader.SetGlobalColor("LightColor", LightColor);
+            Shader.SetGlobalFloat("LightNear", Near);
+            Shader.SetGlobalFloat("LightFar", Far);
+        }
+        
     }
 }
