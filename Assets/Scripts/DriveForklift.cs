@@ -448,16 +448,16 @@ public class DriveForklift : MonoBehaviour
         Matrix4x4 rightMatrix = rightFork.getNodeMatrix();
         Vector3 rightPosition = rightMatrix.GetColumn(3);
         //float newX = (leftPosition.x + rightPosition.x) / 2;
-        float newX = leftPosition.x + 0.5f;
-        float newY = leftPosition.y - 0.1f;
-        float newZ = (leftPosition.z + rightPosition.z) / 2;
+        //float newX = leftPosition.x + 0.f;
+        //float newY = leftPosition.y - 0.1f;
+        //float newZ = (leftPosition.z + rightPosition.z) / 2;
         Vector3 forkup = forksSceneMatrix.GetColumn(1).normalized;
         Vector3 forkforward = forksSceneMatrix.GetColumn(2).normalized;
         Vector3 forkright = forksSceneMatrix.GetColumn(0).normalized;
         leftPosition = (leftPosition + rightPosition) / 2;
         //leftPosition -= forkforward * 0.3f;
-        leftPosition += forkright;
-        leftPosition -= forkup * 0.1f;
+        leftPosition += forkright*0.1f;
+        leftPosition -= forkup * 0.05f;
         selectedPallet.localPosition = leftPosition;
         Vector4 newRotation = leftMatrix.GetColumn(2);
 
