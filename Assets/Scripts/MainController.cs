@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainController : MonoBehaviour
 {
@@ -42,16 +43,36 @@ public class MainController : MonoBehaviour
 
     public Vector3 nextPickUpCoordinates;
 
+    public Text statusText;
+
+    public float timeRemaining = 420;
+    public bool timerIsRunning = false;
+    public Text timerText;
+
     void Start()
     {
         Debug.Assert(arrow != null);
         Debug.Assert(forklift != null);
         //rt = GameObject.Find("Arrow").GetComponent<RectTransform>();
         forkDrive = forklift.GetComponent<DriveForklift>();
+        timerIsRunning = true;
     }
 
     void Update()
     {
+        if (timerIsRunning)
+        {
+            if (timeRemaining > 0)
+            {
+                timeRemaining -= Time.deltaTime;
+                displayTime(timeRemaining);
+            } else
+            {
+                Debug.Log("Time has ended!");
+                timeRemaining = 0;
+                timerIsRunning = false;
+            }
+        }
         pallet = forkDrive.selectedPallet;
         if (pallet != null && !done)
         {
@@ -65,6 +86,7 @@ public class MainController : MonoBehaviour
                     currDropOffShelf = secondDropOffShelf;
                     nextPickUpCoordinates = new Vector3(thirdPickUpShelf.transform.position.x, thirdPickUpShelf.transform.position.y + 0.2f, thirdPickUpShelf.transform.position.z);
                     currPickUpShelf = thirdPickUpShelf;
+                    Debug.Log("Hello");
                     if (onThird)
                     {
                         currDropOffShelf = thirdDropOffShelf;
@@ -90,6 +112,7 @@ public class MainController : MonoBehaviour
         if (done)
         {
             endGame();
+            statusText.text = "Drop-offs completed: 5 / 5";
         }
     }
 
@@ -126,6 +149,7 @@ public class MainController : MonoBehaviour
             {
                 onSecond = true;
             }
+            updateDropOffStatus();
             if (!done)
             {
                 prevPickUpShelf = currPickUpShelf;
@@ -176,6 +200,38 @@ public class MainController : MonoBehaviour
     public void endGame()
     {
 
+    }
+
+    public void displayTime(float timeToDisplay)
+    {
+        timeToDisplay += 1;
+        float minutes = Mathf.FloorToInt(timeToDisplay / 60);
+        float seconds = Mathf.FloorToInt(timeToDisplay % 60);
+        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        if (minutes == 0 && seconds < 10)
+        {
+            timerText.color = new Color(1, 0, 0, 1);
+        }
+    }
+
+    public void updateDropOffStatus()
+    {
+        if (onSecond)
+        {
+            statusText.text = "Drop-offs completed: 1 / 5";
+            if (onThird)
+            {
+                statusText.text = "Drop-offs completed: 2 / 5";
+                if (onFourth)
+                {
+                    statusText.text = "Drop-offs completed: 3 / 5";
+                    if (onFifth)
+                    {
+                        statusText.text = "Drop-offs completed: 4 / 5";
+                    }
+                }
+            }
+        }
     }
 
 }
