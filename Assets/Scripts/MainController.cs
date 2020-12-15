@@ -48,7 +48,7 @@ public class MainController : MonoBehaviour
     public Text endMessageText;
     public GameObject endMessage;
 
-    public float timeRemaining = 420;
+    public float timeRemaining = 180;
     public bool timerIsRunning = false;
     public Text timerText;
 
@@ -79,7 +79,7 @@ public class MainController : MonoBehaviour
                 displayTime(timeRemaining);
             } else
             {
-                done = true;
+                //done = true;
                 timeRemaining = 0;
                 timerIsRunning = false;
             }
@@ -103,7 +103,6 @@ public class MainController : MonoBehaviour
                     currDropOffShelf = secondDropOffShelf;
                     nextPickUpCoordinates = new Vector3(thirdPickUpShelf.transform.position.x, thirdPickUpShelf.transform.position.y + 0.2f, thirdPickUpShelf.transform.position.z);
                     currPickUpShelf = thirdPickUpShelf;
-                    Debug.Log("Hello");
                     if (onThird)
                     {
                         currDropOffShelf = thirdDropOffShelf;
