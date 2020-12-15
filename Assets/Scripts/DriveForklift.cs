@@ -48,7 +48,7 @@ public class DriveForklift : MonoBehaviour
 
     void Update()
     {
-
+        checkWallCollision();
         if (Mathf.Abs(velocity) < 0.01f)
         {
             velocity = 0;
@@ -202,9 +202,11 @@ public class DriveForklift : MonoBehaviour
             //SERIOUSLY IF THIS IS NOT UPDATED COLLISION DOES NOT WORK
             if (velocity != 0 || frontMoved || forksMoved)
             {
+                
                 Transform palletCollision = checkPalletCollision();
                 bool shelfCollision = checkShelfCollision();
                 bool wallCollision = checkWallCollision();
+                Debug.Log("Wall Collision: " + wallCollision);
                 bool palletCollidingWithShelf = false;
                 if (selectedPallet != null)
                 {
@@ -215,7 +217,11 @@ public class DriveForklift : MonoBehaviour
                 {
                     if (movedForward || movedBackward || rolledForward)
                     {
+                        Debug.Log("Undoing Movement");
                         frameSceneNode.transform.position -= (frameSceneNode.transform.right * movementMod);
+                        Matrix4x4 j = Matrix4x4.identity;
+                        frameSceneNode.CompositeXform(ref j);
+                        Debug.Log("Wall Collision redux: " + checkWallCollision());
                     }
                     if (rotatedLeft)
                     {
@@ -278,7 +284,7 @@ public class DriveForklift : MonoBehaviour
 
     public bool palletColliding()
     {
-        ArrayList toTest = world.testShelfCollision(selectedPallet);
+        ArrayList toTest = world.testPalletShelfCollision(selectedPallet);
         foreach (Transform shelf in toTest)
         {
             foreach (Transform shelfPart in shelf)
@@ -329,20 +335,14 @@ public class DriveForklift : MonoBehaviour
 
     public bool checkWallCollision()
     {
-        if (transform.GetComponent<Collider>().bounds.max.x > maxX)
-        {
+        if (transform.position.x > 46.0)
             return true;
-        }
-        if (transform.GetComponent<Collider>().bounds.min.x < minX) {
+        if (transform.position.x < -46.0)
             return true;
-        }
-        if (transform.GetComponent<Collider>().bounds.max.z > maxZ)
-        {
+        if (transform.position.z > 46.0)
             return true;
-        }
-        if (transform.GetComponent<Collider>().bounds.min.z < minZ) {
+        if (transform.position.z < -46.0)
             return true;
-        }
         return false;
     }
 

@@ -13,6 +13,8 @@ public class TheWorld : MonoBehaviour
 
     private void Start()
     {
+        Physics.autoSimulation = true;
+        Physics.IgnoreLayerCollision(0, 1);
         Debug.Assert(Aisles != null);
         Debug.Assert(Pallets != null);
         Debug.Assert(Walls != null);
@@ -51,19 +53,18 @@ public class TheWorld : MonoBehaviour
         return toTest;
     }
 
-    public ArrayList testWallCollision(Transform forklift)
+    public bool testWallCollision(Transform liftTransform)
     {
-        ArrayList toTest = new ArrayList();
-        BoxCollider liftCollider = forklift.GetComponent<BoxCollider>();
+        BoxCollider liftCollider = liftTransform.GetComponent<BoxCollider>();
         foreach (Transform wall in Walls)
         {
             BoxCollider wallCollider = wall.GetComponent<BoxCollider>();
             if (intersectColliders(liftCollider, wallCollider))
             {
-                toTest.Add(wall);
+                return true;
             }
         }
-        return toTest;
+        return false;
     }
 
     public ArrayList testPalletCollision(Transform forkliftXForm)
@@ -78,6 +79,26 @@ public class TheWorld : MonoBehaviour
             if (Vector3.Distance(forksPos, palletXForm.position) < threshold)
             {
                 toTest.Add(palletXForm);
+            }
+        }
+        return toTest;
+    }
+
+    public ArrayList testPalletShelfCollision(Transform palletXForm)
+    {
+        float threshold = 7f;
+        ArrayList toTest = new ArrayList();
+
+        Vector3 palletPos = palletXForm.position;
+        foreach (Transform Aisle in Aisles)
+        {
+            foreach (Transform Shelf in Aisle)
+            {
+                Vector3 ShelfPos = Shelf.position;
+                if (Vector3.Distance(ShelfPos, palletPos) < threshold)
+                {
+                    toTest.Add(Shelf);
+                }
             }
         }
         return toTest;
