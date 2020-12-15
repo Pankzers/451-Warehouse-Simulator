@@ -878,11 +878,12 @@ MonoBehaviour:
   statusText: {fileID: 498725997}
   endMessageText: {fileID: 1461200360}
   endMessage: {fileID: 1589336029}
-  timeRemaining: 15
+  timeRemaining: 180
   timerIsRunning: 0
   timerText: {fileID: 1404818872}
   resetButton: {fileID: 1803585676}
   exitButton: {fileID: 1660713822}
+  ignoreTimer: 0
 --- !u!1 &70251788 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7432852557102529754, guid: 15ec4f9d50cd7dd4dbc922b79d49b3b4,
