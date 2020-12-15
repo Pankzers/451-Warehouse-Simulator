@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -686,6 +686,8 @@ MonoBehaviour:
   thirdPickUpShelf: {fileID: 1376029902}
   fourthPickUpShelf: {fileID: 1900688423}
   fifthPickUpShelf: {fileID: 1027513117}
+  currPickUpShelf: {fileID: 0}
+  prevPickUpShelf: {fileID: 0}
   firstDropOffShelf: {fileID: 521404922}
   secondDropOffShelf: {fileID: 796796298}
   thirdDropOffShelf: {fileID: 44356858}
@@ -697,10 +699,12 @@ MonoBehaviour:
   onThird: 0
   onFourth: 0
   onFifth: 0
+  done: 0
   palletPrefab: {fileID: 8961883842416009121, guid: f0dae05eda08a544bb0728aa5a864785,
     type: 3}
   palletParent: {fileID: 1613838928}
-  originalColor: {r: 0, g: 0, b: 0, a: 0}
+  newPallet: {fileID: 0}
+  pickUpShelfColor: {r: 0, g: 0, b: 0, a: 0}
   shelfMaterial: {fileID: 2100000, guid: f9a03d6b6b89d134a80694f4bf2ecbc3, type: 2}
   arrow: {fileID: 1264995310}
   forklift: {fileID: 400660506}
@@ -4939,8 +4943,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: -5.6, y: 0.5, z: 0.7}
+  m_Size: {x: 1, y: 0.1, z: 15}
+  m_Center: {x: -7, y: 0, z: 0}
 --- !u!23 &431910942
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20370,8 +20374,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 1.3, y: 0.5, z: 0.7}
+  m_Size: {x: 1, y: 0.1, z: 15}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1762374203
 MeshRenderer:
   m_ObjectHideFlags: 0
