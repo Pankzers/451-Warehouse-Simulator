@@ -69,8 +69,8 @@ public class CameraManipulation : MonoBehaviour
                         thetay = 0;
                     }
                 }
-                Quaternion q = Quaternion.AngleAxis(thetax, Vector3.up);
-                Quaternion q2 = Quaternion.AngleAxis(thetay, Vector3.right);
+                Quaternion q = Quaternion.AngleAxis(thetax, mMainCamera.transform.up);
+                Quaternion q2 = Quaternion.AngleAxis(thetay, mMainCamera.transform.right);
                 q = q2 * q;
                 Matrix4x4 r = Matrix4x4.TRS(Vector3.zero, q, Vector3.one);
                 Matrix4x4 invP = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
@@ -85,11 +85,11 @@ public class CameraManipulation : MonoBehaviour
                 float thetay = Input.GetAxis("Mouse Y");
                 Vector3 LookPos = defaultSecondaryLookPoint;
                 Vector3 CamPos = SecondaryCamPos;
-                defaultSecondaryLookPoint = (defaultSecondaryLookPoint) + thetax * (Vector3)forks.getCombinedMatrix().GetColumn(0);
-                SecondaryCamPos = CamPos + thetax * mSecondaryCamera.transform.right;
+                defaultSecondaryLookPoint.x += thetax;
+                SecondaryCamPos.x += thetax;
 
             }
-            MainCamPos = MainCamPos + Input.mouseScrollDelta.y * mMainCamera.transform.forward;
+            MainCamPos = MainCamPos - Input.mouseScrollDelta.y * 0.1f * MainCamPos;
         }
     }
 
@@ -101,7 +101,7 @@ public class CameraManipulation : MonoBehaviour
             Matrix4x4 parentNodeMatrix = node.getCombinedMatrix();
             cam.transform.localPosition = parentNodeMatrix * CamPos + parentNodeMatrix.GetColumn(3);
             //V = (Vector3)parentNodeMatrix.GetColumn(3) - cam.transform.localPosition;
-            V = (Vector3)parentNodeMatrix.GetColumn(3) + LookPoint - cam.transform.localPosition;
+            V = (Vector3)parentNodeMatrix.GetColumn(3) + (Vector3)(parentNodeMatrix*LookPoint) - cam.transform.localPosition;
             //Debug.Log("LP: " + parentNodeMatrix.GetColumn(3));
         } else
         {

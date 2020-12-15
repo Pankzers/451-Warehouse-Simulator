@@ -48,7 +48,7 @@ public class MainController : MonoBehaviour
     public Text endMessageText;
     public GameObject endMessage;
 
-    public float timeRemaining = 180;
+    public float timeRemaining = 420;
     public bool timerIsRunning = false;
     public Text timerText;
 
@@ -79,7 +79,7 @@ public class MainController : MonoBehaviour
                 displayTime(timeRemaining);
             } else
             {
-                //done = true;
+                done = true;
                 timeRemaining = 0;
                 timerIsRunning = false;
             }
@@ -103,6 +103,7 @@ public class MainController : MonoBehaviour
                     currDropOffShelf = secondDropOffShelf;
                     nextPickUpCoordinates = new Vector3(thirdPickUpShelf.transform.position.x, thirdPickUpShelf.transform.position.y + 0.2f, thirdPickUpShelf.transform.position.z);
                     currPickUpShelf = thirdPickUpShelf;
+                    Debug.Log("Hello");
                     if (onThird)
                     {
                         currDropOffShelf = thirdDropOffShelf;
@@ -121,7 +122,7 @@ public class MainController : MonoBehaviour
                     }
                 }
             }
-            displayDropOffLocation();
+            
             newDropOffLocation();
         }
         checkNewPalletLocation();
@@ -130,6 +131,7 @@ public class MainController : MonoBehaviour
             endGame();
             statusText.text = "Drop-offs completed: 5 / 5";
         }
+        displayDropOffLocation();
     }
 
     public void newDropOffLocation()
@@ -185,7 +187,15 @@ public class MainController : MonoBehaviour
         //Vector3 dir = (objScreenPos - rt.position).normalized;
         //float angle = Mathf.Rad2Deg * Mathf.Atan2(dir.y, dir.x);
         //rt.rotation = Quaternion.AngleAxis(angle, Vector3.forward);*/
-        Vector3 objectivePos = currDropOffShelf.transform.position;
+        Vector3 objectivePos = Vector3.zero;
+        if(pallet != null)
+        {
+            objectivePos = currDropOffShelf.transform.position;
+        } else
+        {
+            objectivePos = palletParent.GetChild(0).position;
+        }
+        
         objectivePos.y = 0;
         Vector3 arrowPos = arrow.position;
         arrowPos.y = 0;

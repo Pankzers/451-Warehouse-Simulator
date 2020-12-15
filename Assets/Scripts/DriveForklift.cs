@@ -47,9 +47,9 @@ public class DriveForklift : MonoBehaviour
         bool rotatedRight = false;
         bool frontMoved = false;
         bool forksMoved = false;
-        float movementMod = 0.015f;
-        Quaternion rotateLeft = Quaternion.AngleAxis(-0.15f, Vector3.up);
-        Quaternion rotateRight = Quaternion.AngleAxis(0.15f, Vector3.up);
+        float movementMod = 4 * Time.deltaTime;
+        Quaternion rotateLeft = Quaternion.AngleAxis(-40 * Time.deltaTime, Vector3.up);
+        Quaternion rotateRight = Quaternion.AngleAxis(40 * Time.deltaTime, Vector3.up);
         Quaternion lastFrontRotation = Quaternion.identity;
         Vector3 lastForksPosition = Vector3.zero;
         if (controller.timeRemaining > 0 || controller.ignoreTimer)
@@ -212,11 +212,11 @@ public class DriveForklift : MonoBehaviour
         ArrayList toTest = world.testShelfCollision(transform);
         if(toTest.Count != 0)
         {
-            Debug.Log("Rough Colliding!");
+            //Debug.Log("Rough Colliding!");
         }
         foreach (Transform xform in toTest)
         {
-            Debug.Log("With: " + xform.name);
+            //Debug.Log("With: " + xform.name);
             foreach (Transform childform in xform)
             {
                 if (world.SAT.CheckCollision(frame.transform, frame.GetComponent<MeshFilter>().mesh, childform, childform.GetComponent<MeshFilter>().mesh))
@@ -238,7 +238,7 @@ public class DriveForklift : MonoBehaviour
     {
         Vector3 rayOrigin = ray.origin;
         Vector3 rayDirection = ray.direction;
-        Debug.DrawRay(rayOrigin, rayDirection * 10, Color.yellow, 10);
+        //Debug.DrawRay(rayOrigin, rayDirection * 10, Color.yellow, 10);
         NodePrimitive node = obj.GetComponent<NodePrimitive>();
         Matrix4x4 trsMatrix = node.getNodeMatrix();
         Vector3 nodePos = trsMatrix.GetColumn(3);
@@ -250,9 +250,9 @@ public class DriveForklift : MonoBehaviour
 
         
 
-        Debug.DrawRay(nodePos, xAxis, Color.red, 5);
-        Debug.DrawRay(nodePos, yAxis, Color.green, 5);
-        Debug.DrawRay(nodePos, zAxis, Color.blue, 5);
+        //Debug.DrawRay(nodePos, xAxis, Color.red, 5);
+        //Debug.DrawRay(nodePos, yAxis, Color.green, 5);
+        //Debug.DrawRay(nodePos, zAxis, Color.blue, 5);
 
         /*
          * CODE CREDIT TO CALVIN1602 until end of method
