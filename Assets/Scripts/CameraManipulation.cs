@@ -85,8 +85,8 @@ public class CameraManipulation : MonoBehaviour
                 float thetay = Input.GetAxis("Mouse Y");
                 Vector3 LookPos = defaultSecondaryLookPoint;
                 Vector3 CamPos = SecondaryCamPos;
-                defaultSecondaryLookPoint = (defaultSecondaryLookPoint) + thetax * (Vector3)forks.getCombinedMatrix().GetColumn(0);
-                SecondaryCamPos = CamPos + thetax * mSecondaryCamera.transform.right;
+                defaultSecondaryLookPoint.x += thetax;
+                SecondaryCamPos.x += thetax;
 
             }
             MainCamPos = MainCamPos + Input.mouseScrollDelta.y * mMainCamera.transform.forward;
