@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CameraManipulation : MonoBehaviour
 {
+    public SceneNode forks = null;
     public Camera mMainCamera = null;
     public Camera mSecondaryCamera = null;
     public Vector3 defaultMainLookPoint = new Vector3();
@@ -21,6 +22,7 @@ public class CameraManipulation : MonoBehaviour
         Debug.Assert(mSecondaryCamera != null);
         Debug.Assert(defaultMainLookPoint != null);
         Debug.Assert(defaultSecondaryLookPoint != null);
+        Debug.Assert(forks != null);
         OnPreCull();
     }
     public void UpdateCameras()
@@ -83,7 +85,7 @@ public class CameraManipulation : MonoBehaviour
                 float thetay = Input.GetAxis("Mouse Y");
                 Vector3 LookPos = defaultSecondaryLookPoint;
                 Vector3 CamPos = SecondaryCamPos;
-                defaultSecondaryLookPoint = (defaultSecondaryLookPoint) + thetax * mSecondaryCamera.transform.right;
+                defaultSecondaryLookPoint = (defaultSecondaryLookPoint) + thetax * (Vector3)forks.getCombinedMatrix().GetColumn(0);
                 SecondaryCamPos = CamPos + thetax * mSecondaryCamera.transform.right;
 
             }
