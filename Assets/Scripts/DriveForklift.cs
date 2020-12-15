@@ -41,6 +41,10 @@ public class DriveForklift : MonoBehaviour
 
     void Update()
     {
+        if (selectedPallet != null)
+        {
+            palletColliding();
+        }
         bool movedForward = false;
         bool movedBackward = false;
         bool rotatedLeft = false;
@@ -170,11 +174,16 @@ public class DriveForklift : MonoBehaviour
         {
             Transform palletCollision = checkPalletCollision();
             bool shelfCollision = checkShelfCollision();
+            bool palletCollidingWithShelf = false;
+            if (selectedPallet != null)
+            {
+                palletCollidingWithShelf = palletColliding();
+            }
             if (selectedPallet != null)
             {
                 pickUpPallet();
             }
-            if((palletCollision != null && palletCollision != selectedPallet) || shelfCollision)
+            if((palletCollision != null && palletCollision != selectedPallet) || shelfCollision || palletCollidingWithShelf)
             {
                 if (movedForward)
                 {
@@ -234,6 +243,31 @@ public class DriveForklift : MonoBehaviour
         }
         return false;
     }
+
+    public bool palletColliding()
+    {
+        ArrayList toTest = world.testShelfCollision(selectedPallet);
+        foreach (Transform shelf in toTest)
+        {
+            foreach (Transform shelfPart in shelf)
+            {
+                foreach (Transform partgroup in selectedPallet)
+                {
+                    foreach (Transform part in partgroup)
+                    {
+                        if (world.SAT.CheckCollision(part, part.GetComponent<MeshFilter>().mesh, shelfPart, shelfPart.GetComponent<MeshFilter>().mesh))
+                        {
+                            Debug.Log("Pallet colliding with shelf");
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
     bool CheckRayPartIntersection(Ray ray, GameObject obj)
     {
         Vector3 rayOrigin = ray.origin;
