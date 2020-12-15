@@ -24,11 +24,11 @@ public class SeparatingAxisTest : MonoBehaviour {
 	Vector3[] aVertices;
 	Vector3[] bVertices;
 
-	float minOverlap = 0;
-	Vector3 minOverlapAxis = Vector3.zero;
+	//float minOverlap = 0;
+	//Vector3 minOverlapAxis = Vector3.zero;
 
-	List<Vector3> penetrationAxes;
-	List<float> penetrationAxesDistance;
+	//List<Vector3> penetrationAxes;
+	//List<float> penetrationAxesDistance;
 
 	// Use this for initialization
 	void Start () {
@@ -53,8 +53,8 @@ public class SeparatingAxisTest : MonoBehaviour {
 
 	public bool CheckCollision( Transform a, Mesh aMesh, Transform b, Mesh bMesh)
 	{
-		minOverlap = 0;
-		minOverlapAxis = Vector3.zero;
+		//minOverlap = 0;
+		//minOverlapAxis = Vector3.zero;
 
 		aAxes = GetAxes(a);
 		bAxes = GetAxes(b);
@@ -104,8 +104,8 @@ public class SeparatingAxisTest : MonoBehaviour {
 		int aVertsLength = aVertices.Length;
 		int bVertsLength = bVertices.Length;
 
-		penetrationAxes = new List<Vector3>();
-		penetrationAxesDistance = new List<float>();
+		//penetrationAxes = new List<Vector3>();
+		//penetrationAxesDistance = new List<float>();
 
 		bool hasOverlap = false;
 
@@ -141,9 +141,9 @@ public class SeparatingAxisTest : MonoBehaviour {
 		Color aColor,
 		Color bColor)
 	{
-		bool hasOverlap = true;
+		//bool hasOverlap = true;
 
-		minOverlap = float.PositiveInfinity;
+		//minOverlap = float.PositiveInfinity;
 
 		for (int i = 0; i < aAxesLength; i++)
 		{
@@ -189,13 +189,13 @@ public class SeparatingAxisTest : MonoBehaviour {
 
 			float overlap = FindOverlap(aProjMin, aProjMax, bProjMin, bProjMax);
 
-			if ( overlap < minOverlap )
+			//if ( overlap < minOverlap )
 			{
-				minOverlap = overlap;
-				minOverlapAxis = axis;
+				//minOverlap = overlap;
+				//minOverlapAxis = axis;
 
-				penetrationAxes.Add(axis);
-				penetrationAxesDistance.Add(overlap);
+				//penetrationAxes.Add(axis);
+				//penetrationAxesDistance.Add(overlap);
 
 			}
 
