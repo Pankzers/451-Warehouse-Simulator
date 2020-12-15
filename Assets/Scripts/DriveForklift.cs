@@ -29,6 +29,8 @@ public class DriveForklift : MonoBehaviour
 
     public float dragMod = 50f;
 
+    public MainController controller; 
+
     void Start()
     {
         Debug.Assert(forkliftCams != null);
@@ -50,7 +52,31 @@ public class DriveForklift : MonoBehaviour
         Quaternion rotateRight = Quaternion.AngleAxis(0.15f, Vector3.up);
         Quaternion lastFrontRotation = Quaternion.identity;
         Vector3 lastForksPosition = Vector3.zero;
-        if(Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
+        if (controller.timeRemaining > 0)
+        {
+            if (Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
+            {
+                frameSceneNode.transform.position += frameSceneNode.transform.right * movementMod;
+                movedForward = true;
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                frameSceneNode.transform.position -= frameSceneNode.transform.right * movementMod;
+                movedBackward = true;
+            }
+            if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+            {
+                rotatedLeft = true;
+                frameSceneNode.transform.localRotation = rotateLeft * frameSceneNode.transform.localRotation;
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                //Debug.Log("RotatingRight");
+                rotatedRight = true;
+                frameSceneNode.transform.localRotation = rotateRight * frameSceneNode.transform.localRotation;
+            }
+        }
+        /*if(Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
         {
             frameSceneNode.transform.position += frameSceneNode.transform.right * movementMod;
             movedForward = true;
@@ -68,7 +94,7 @@ public class DriveForklift : MonoBehaviour
             //Debug.Log("RotatingRight");
             rotatedRight = true;
             frameSceneNode.transform.localRotation = rotateRight * frameSceneNode.transform.localRotation;
-        }
+        }*/
         if(Input.GetMouseButtonDown(0) && !Input.GetKey(KeyCode.LeftAlt))
         {
             Ray ray = forkliftCams.getSecondaryCamRay(); 

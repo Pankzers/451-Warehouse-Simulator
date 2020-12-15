@@ -74,10 +74,12 @@ public class MainController : MonoBehaviour
                 displayTime(timeRemaining);
             } else
             {
-                Debug.Log("Time has ended!");
                 timeRemaining = 0;
                 timerIsRunning = false;
             }
+        } else
+        {
+            endGame();
         }
         pallet = forkDrive.selectedPallet;
         if (pallet != null && !done)
@@ -205,7 +207,13 @@ public class MainController : MonoBehaviour
 
     public void endGame()
     {
-
+        if (timeRemaining > 0)
+        {
+            Debug.Log("Congratulations!");
+        } else
+        {
+            Debug.Log("Better luck next time!");
+        }
     }
 
     public void displayTime(float timeToDisplay)

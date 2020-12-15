@@ -876,7 +876,7 @@ MonoBehaviour:
   forklift: {fileID: 400660506}
   nextPickUpCoordinates: {x: 0, y: 0, z: 0}
   statusText: {fileID: 498725997}
-  timeRemaining: 420
+  timeRemaining: 15
   timerIsRunning: 0
   timerText: {fileID: 1404818872}
   resetButton: {fileID: 1803585676}
@@ -4635,6 +4635,7 @@ MonoBehaviour:
   draggingForks: 0
   selectedPallet: {fileID: 0}
   dragMod: 0.01
+  controller: {fileID: 68584051}
 --- !u!114 &400660509
 MonoBehaviour:
   m_ObjectHideFlags: 0
