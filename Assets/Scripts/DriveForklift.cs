@@ -533,39 +533,19 @@ public class DriveForklift : MonoBehaviour
                         }
                         return palletXForm;
                     }
-                    //if (fineCollisionLeftFork && fineCollisionRightFork)
-                    //{
-                    //    //Debug.Log("Pick up pallet");
-                    //    selectedPallet = palletXForm;
-                    //    return true;
-                    //} else if (fineCollisionLeftFork || fineCollisionRightFork)
-                    //{
-                    //    return true;
-                    //}
+                    bool fineCollisionLeftFront = world.SAT.CheckCollision(leftFront.transform, leftFront.GetComponent<MeshFilter>().mesh, part, part.GetComponent<MeshFilter>().mesh);
+                    bool fineCollisionRightFront = world.SAT.CheckCollision(rightFront.transform, rightFront.GetComponent<MeshFilter>().mesh, part, part.GetComponent<MeshFilter>().mesh);
+                    bool fineCollisionFrame = world.SAT.CheckCollision(frame.transform, frame.GetComponent<MeshFilter>().mesh, part, part.GetComponent<MeshFilter>().mesh);
+                    if(fineCollisionLeftFront || fineCollisionRightFront || fineCollisionFrame)
+                    //if (fineCollisionLeftFront || fineCollisionRightFront)
+                    {
+                        return palletXForm;
+                    }
                 }
             }
         }
         return null;
     }
-
-    /*public void pickUpPallet()
-    {
-        Matrix4x4 forksSceneMatrix = forksSceneNode.getCombinedMatrix();
-        Matrix4x4 leftMatrix = leftFork.getNodeMatrix();
-        Vector3 leftPosition = leftMatrix.GetColumn(3); 
-        Matrix4x4 rightMatrix = rightFork.getNodeMatrix();
-        Vector3 rightPosition = rightMatrix.GetColumn(3);
-        //float newX = (leftPosition.x + rightPosition.x) / 2;
-        float newX = leftPosition.x + 0.5f;
-        float newY = leftPosition.y - 0.1f;
-        float newZ = (leftPosition.z + rightPosition.z) / 2;
-        selectedPallet.localPosition = new Vector3(newX, newY, newZ);
-        Vector3 forkUp = forksSceneMatrix.GetColumn(1).normalized;
-        Vector3 forkForward = forksSceneMatrix.GetColumn(2).normalized;
-        selectedPallet.localRotation = Quaternion.FromToRotation(Vector3.up, forkUp);
-        selectedPallet.localRotation *= Quaternion.FromToRotation(Vector3.forward, forkForward);
-
-    }*/
 
     public void pickUpPallet()
     {

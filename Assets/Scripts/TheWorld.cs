@@ -69,7 +69,7 @@ public class TheWorld : MonoBehaviour
 
     public ArrayList testPalletCollision(Transform forkliftXForm)
     {
-        float threshold = 3f;
+        float threshold = 7f;
         ArrayList toTest = new ArrayList();
         DriveForklift forkDrive = forkliftXForm.GetComponent<DriveForklift>();
         Vector3 forksPos = (forkDrive.leftFork.getNodeMatrix().GetColumn(3) + forkDrive.rightFork.getNodeMatrix().GetColumn(3)) / 2;
